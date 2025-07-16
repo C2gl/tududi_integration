@@ -1,8 +1,8 @@
 {
-    "name": "Tududi Hacs"
+    "name": "Tududi Hacs",
     "content_in_root": false,
     "filename": "panel.html",
     "render_readme": true,
     "domains": ["lovelace"],
-    "country": "be",
+    "country": "be"
 }
