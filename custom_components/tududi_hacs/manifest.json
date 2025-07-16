@@ -1,8 +1,10 @@
 {
     "domain": "tududi_hacs",
-    "name": "TuDuDi HACS webpanel",
     "documentation": "https://github.com/c2gl/tududi_HACS",
-    "dependencies": [],
+    "issue_tracker": "https://github.com/c2gl/tududi_HACS/issues",
     "codeowners": ["@c2gl"],
+    "name": "TuDuDi HACS webpanel",
+    "version": "0.0.1",
+    "dependencies": [],
     "requirements": []
 }
