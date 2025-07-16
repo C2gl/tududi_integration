@@ -27,3 +27,6 @@ feel free to try and help by making your pull request, (don't forget to make you
 sorry if my code is non working or painfull to read, i am not a def and learning as i do. anny help is welcome and greatly apreciated.
 
 if you have a issue with anything, feel free to let me know in a constructive and respectfull way. but keep in mind i was left unsupervised
+
+# credits where credits are due
+- this entire prokect only exists as a bridge for the previously amazing [Tududi](https://github.com/chrisvel/tududi) project
