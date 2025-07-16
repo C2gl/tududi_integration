@@ -16,3 +16,7 @@ To do so, please refer to [HACS install guide](https://www.hacs.xyz/docs/use/dow
 5. Install the app 
 
 6. Try to enjoy when not too buggy 😅
+
+# bug reports
+please use the template provided when reporting a bug, 
+if you can, trying to provide as much info as possible would be great 
