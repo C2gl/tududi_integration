@@ -30,4 +30,4 @@ if you have a issue with anything, feel free to let me know in a constructive an
 
 # credits where credits are due
 - this entire prokect only exists as a bridge for the previously amazing [Tududi](https://github.com/chrisvel/tududi) project
-- the use of HACS.io that greatly simplifies this and eases the use
+- the use of [HACS.io](https://www.hacs.xyz/) that greatly simplifies this and eases the use
