@@ -4,6 +4,7 @@
     "issue_tracker": " ",
     "codeowners": ["@c2gl"],
     "name": "TuDuDi HACS webpanel",
+    "version": "0.0.1",
     "dependencies": [],
     "requirements": []
 }
