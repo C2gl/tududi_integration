@@ -4,16 +4,27 @@ all this will do is embed an exteral docker-hosted webpage
 
 
 # installation 
-1. Install HACS in home assistant if not already done.
+## HACS instructions
+Install HACS in home assistant if not already done.
 To do so, please refer to [HACS install guide](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs)
+Copy the repo url https://github.com/c2gl/tududi_HACS
+Paste the repo in hacs
+Search for tududi_HACS in the HASC store
+Install the app 
+once installed, you should use visual studio plugin to eddit some configurations manually
 
-2. Copy the repo url https://github.com/c2gl/tududi_HACS
+## configurations
+once tududi_hacs is installed you should see a "config/custom_components/tududi_hacs"
+in that folder there are two files you should **not** eddit
 
-3. Paste the repo in hacs
+but under "/config/www" you should make a new folder if not already present, called "tududi_hacs" and in that file you are to add the "panel.html" file that you can find here in the [repo](https://github.com/C2gl/tududi_HACS/blob/main/www/tududi_hacs/panel.html)
 
-4. Search for tududi_HACS in the HASC store
+if the file was already automatically added by hacs, you just need to eddit the url to your tududi server
+on line 8, you are to eddit "[your tududi irl]" and paste in your own irl (do not forget to remove the brackets )
 
-5. Install the app 
+you are also to add the code in [configuration.yaml](https://github.com/C2gl/tududi_HACS/blob/main/configuration.yaml) to the configuration.yaml file in your home assistant to display the new tab in the sidebar. its also here that you can eddit the title and icon to your own liking.
+## nginx configuration 
+if your tududi instance is behi
 
 6. Try to enjoy when not too buggy 😅
 
