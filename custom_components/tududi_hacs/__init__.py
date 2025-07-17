@@ -3,11 +3,6 @@ from homeassistant.core import HomeAssistant
 DOMAIN = "tududi_hacs"
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    await hass.http.async_register_static_path(
-        "/tududi-panel",
-        hass.config.path("www/tududi_hacs"),
-        cache_headers=False,
-    )
     hass.components.frontend.async_register_panel(
         component_name="custom",
         frontend_url_path="tududi",
@@ -15,6 +10,6 @@ async def async_setup(hass: HomeAssistant, config: dict):
         sidebar_icon="mdi:checkbox-marked-outline",
         config={},
         require_admin=False,
-        module_url="/tududi-panel/panel.html",
+        module_url="/local/tududi_hacs/panel.html",
     )
     return True
