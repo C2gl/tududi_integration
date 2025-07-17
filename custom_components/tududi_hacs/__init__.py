@@ -1,17 +1,13 @@
 from homeassistant.core import HomeAssistant
-from homeassistant.components.http.static import StaticPathConfig
-
 
 DOMAIN = "tududi_hacs"
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    await hass.http.async_register_static_paths([
-        StaticPathConfig(
-            url_path="/tududi-panel",
-            file_path=hass.config.path("www/tududi_hacs/panel.html"),
-            cache_headers=False,
-        )
-    ])
+    hass.http.register_static_path(
+        "/tududi-panel",
+        hass.config.path("www/tududi_hacs"),
+        cache_headers=False,
+    )
     hass.components.frontend.async_register_panel(
         component_name="custom",
         frontend_url_path="tududi",
@@ -19,6 +15,6 @@ async def async_setup(hass: HomeAssistant, config: dict):
         sidebar_icon="mdi:checkbox-marked-outline",
         config={},
         require_admin=False,
-        module_url="/tududi-panel",
+        module_url="/tududi-panel/panel.html",
     )
     return True
