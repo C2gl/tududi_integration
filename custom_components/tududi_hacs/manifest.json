@@ -6,6 +6,5 @@
     "name": "TuDuDi HACS webpanel",
     "version": "0.1.0",
     "dependencies": [],
-    "requirements": [],
-    "config_flow": true
+    "requirements": []
 }
