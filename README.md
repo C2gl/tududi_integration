@@ -11,12 +11,12 @@ Copy the repo url https://github.com/c2gl/tududi_HACS
 Paste the repo in hacs
 Search for tududi_HACS in the HASC store
 Install the app 
-once installed, you should use visual studio plugin to eddit some configurations manually
+once installed, you should use Visual Studio plugin to edit some configurations manually
 
 ## configurations
 once tududi_hacs is installed you should restart home assistant.
 
-After this restart, you can head to `setings -> devices & services -> add integration` 
+After this restart, you can head to `settings -> devices & services -> add integration` 
 Here you can look for **tududi HACS webpanel** and when adding said integration, it will prompt you for the tududi url.
 
 
