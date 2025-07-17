@@ -16,7 +16,7 @@ once installed, you should use Visual Studio plugin to edit some configurations 
 ## configurations
 once tududi_hacs is installed you should restart home assistant.
 
-After this restart, you can head to `setings -> devices & services -> add integration` 
+After this restart, you can head to `settings -> devices & services -> add integration` 
 Here you can look for **tududi HACS webpanel** and when adding said integration, it will prompt you for the tududi url.
 
 
