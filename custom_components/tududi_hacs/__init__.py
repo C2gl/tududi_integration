@@ -3,7 +3,14 @@ from homeassistant.core import HomeAssistant
 DOMAIN = "tududi_hacs"
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    hass.components.frontend.async_register_panel(
+    # Ensure frontend is loaded
+    await hass.helpers.discovery.async_load_platform("frontend", DOMAIN, {}, config)
+
+    # Import the register function directly
+    from homeassistant.components.frontend import async_register_panel
+
+    async_register_panel(
+        hass,
         component_name="custom",
         frontend_url_path="tududi",
         sidebar_title="Tududi",
