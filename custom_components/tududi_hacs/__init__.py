@@ -9,7 +9,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
         sidebar_icon="mdi:checkbox-marked-outline",
         frontend_url_path="tududi",
         config={
-            "url": "https://ha.guilatrien.com/local/tududi_hacs/panel.html"
+            "url": "[your Tududi URL]",
         },
         require_admin=False
     )
