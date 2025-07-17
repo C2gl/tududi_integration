@@ -14,19 +14,26 @@ Install the app
 once installed, you should use visual studio plugin to eddit some configurations manually
 
 ## configurations
-once tududi_hacs is installed you should see a "config/custom_components/tududi_hacs"
+once tududi_hacs is installed you should see a `config/custom_components/tududi_hacs`
 in that folder there are two files you should **not** eddit
 
-but under "/config/www" you should make a new folder if not already present, called "tududi_hacs" and in that file you are to add the "panel.html" file that you can find here in the [repo](https://github.com/C2gl/tududi_HACS/blob/main/www/tududi_hacs/panel.html)
+but under `/config/www` you should make a new folder if not already present, called `tududi_hacs` and in that file you are to add the `panel.html` file that you can find here in the [repo](https://github.com/C2gl/tududi_HACS/blob/main/www/tududi_hacs/panel.html)
 
 if the file was already automatically added by hacs, you just need to eddit the url to your tududi server
-on line 8, you are to eddit "[your tududi irl]" and paste in your own irl (do not forget to remove the brackets )
+on line 8, you are to eddit `"[your tududi irl]"` and paste in your own irl (do not forget to remove the brackets )
 
-you are also to add the code in [configuration.yaml](https://github.com/C2gl/tududi_HACS/blob/main/configuration.yaml) to the configuration.yaml file in your home assistant to display the new tab in the sidebar. its also here that you can eddit the title and icon to your own liking.
+you are also to add the code in [configuration.yaml](https://github.com/C2gl/tududi_HACS/blob/main/configuration.yaml) to the `configuration.yaml` file in your home assistant to display the new tab in the sidebar. its also here that you can eddit the title and icon to your own liking.
+
 ## nginx configuration 
-if your tududi instance is behi
+if your tududi instance is behind NGINX, you probably will see an error telling you that home assistant is not permitted to the url of your tududi. 
+this is because nginx blocks iframe by default. this can be worked around by adding these lines to your config or advanced settings 
 
-6. Try to enjoy when not too buggy 😅
+```yaml
+add_header X-Frame-Options "ALLOW-FROM [your_home_assistant_url]";
+add_header Content-Security-Policy "frame-ancestors 'self' [your_home_assistant_url]";
+```
+
+# Try to enjoy when not too buggy 😅
 
 # bug reports
 please use the template provided when reporting a bug, 
