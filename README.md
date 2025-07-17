@@ -30,6 +30,7 @@ this is because nginx blocks iframe by default. this can be worked around by add
 add_header X-Frame-Options "ALLOW-FROM [your_home_assistant_url]";
 add_header Content-Security-Policy "frame-ancestors 'self' [your_home_assistant_url]";
 ```
+it is also possible that you have to add these same lines but then in your HA proxy settings, otherwise the direct url from home assistant works, but the side tab will not.
 
 # Try to enjoy when not too buggy 😅
 
