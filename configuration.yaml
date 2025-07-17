@@ -1,9 +1,0 @@
-# Configuration for Tududi custom panel in Home Assistant
-panel_custom:
-  - name: tududi_hacs
-    sidebar_title: Tududi
-    sidebar_icon: mdi:clipboard-text
-    url_path: tududi
-    module_url: /local/tududi_hacs/panel.html
-    embed_iframe: true
-    require_admin: false
