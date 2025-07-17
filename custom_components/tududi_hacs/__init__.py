@@ -3,7 +3,7 @@ from homeassistant.core import HomeAssistant
 DOMAIN = "tududi_hacs"
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    hass.http.register_static_path(
+    await hass.http.async_register_static_path(
         "/tududi-panel",
         hass.config.path("www/tududi_hacs"),
         cache_headers=False,
