@@ -3,14 +3,18 @@ from homeassistant.core import HomeAssistant
 DOMAIN = "tududi_hacs"
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    hass.components.frontend.async_register_built_in_panel(
-        component_name="iframe",
+    hass.http.register_static_path(
+        "/tududi-panel",
+        hass.config.path("www/tududi_hacs/panel.html"),
+        cache_headers=False,
+    )
+    hass.components.frontend.async_register_panel(
+        component_name="custom",
+        frontend_url_path="tududi",
         sidebar_title="Tududi",
         sidebar_icon="mdi:checkbox-marked-outline",
-        frontend_url_path="tududi",
-        config={
-            "url": "[your Tududi URL]",
-        },
-        require_admin=False
+        config={},
+        require_admin=False,
+        module_url="/tududi-panel",
     )
     return True
