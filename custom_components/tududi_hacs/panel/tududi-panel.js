@@ -2,9 +2,30 @@ class TududiPanel extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    this.url = 'https://tududi.com'; // Default URL
   }
 
   connectedCallback() {
+    this._fetchConfig();
+  }
+
+  async _fetchConfig() {
+    try {
+      const response = await fetch('/api/tududi_hacs/config');
+      if (response.ok) {
+        const config = await response.json();
+        if (config.url) {
+          this.url = config.url;
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching Tududi config:', err);
+    } finally {
+      this._renderIframe();
+    }
+  }
+
+  _renderIframe() {
     this.shadowRoot.innerHTML = `
       <style>
         :host {
@@ -17,7 +38,7 @@ class TududiPanel extends HTMLElement {
           height: 100%;
         }
       </style>
-      <iframe src="https://tududi.com"></iframe>
+      <iframe src="${this.url}" allow="fullscreen"></iframe>
     `;
   }
 }
