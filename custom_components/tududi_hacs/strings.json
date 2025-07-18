@@ -1,0 +1,30 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Tududi Web Panel",
+        "description": "Enter the URL for your Tududi instance",
+        "data": {
+          "url": "URL"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Please enter a valid URL starting with http:// or https://"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configure Tududi Web Panel",
+        "description": "Update the URL for your Tududi instance",
+        "data": {
+          "url": "URL"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Please enter a valid URL starting with http:// or https://"
+    }
+  }
+}
