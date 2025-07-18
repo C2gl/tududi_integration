@@ -5,6 +5,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.components.frontend import async_register_built_in_panel
 from homeassistant.components.http import HomeAssistantView
+from homeassistant.components.http.static import StaticPathConfig
 from aiohttp import web
 
 from .const import DOMAIN, DEFAULT_URL
@@ -34,10 +35,14 @@ async def async_setup(hass: HomeAssistant, config):
         },
     )
 
-    # Register static directory for panel files
-    hass.http.register_static_path(
-        f"/{DOMAIN}_panel", PANEL_DIR, cache_headers=False
-    )
+    # Register static directory for panel files - using the async method
+    await hass.http.async_register_static_paths([
+        StaticPathConfig(
+            f"/{DOMAIN}_panel", 
+            PANEL_DIR, 
+            cache_headers=False
+        )
+    ])
 
     # Register the iframe view
     hass.http.register_view(TududiIframeView())
