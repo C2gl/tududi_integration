@@ -13,7 +13,7 @@ This integration embeds your Tududi server in a convenient sidebar panel with fu
 
 - **Home Assistant**: Version 2023.1.0 or newer
 - **HACS**: Home Assistant Community Store installed
-- **Tududi Server**: A running [Tududi](https://github.com/chrisvel/tududi) instance in an external docker. please follow Tududi's repo linked above with instructions on how to get this running
+- **Tududi Server**: A running [Tududi](https://github.com/chrisvel/tududi) instance in an external docker. Please follow Tududi's repo linked above with instructions on how to get this running
 
 # Installation 
 ## HACS Instructions
