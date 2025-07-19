@@ -71,10 +71,11 @@ async def async_unregister_panel(hass: HomeAssistant, entry: ConfigEntry) -> Non
     
     # Remove from frontend panels
     try:
-        if hasattr(hass.data, "frontend_panels") and panel_name in hass.data.get("frontend_panels", {}):
-            hass.data["frontend_panels"].pop(panel_name, None)
-            # Trigger frontend refresh
-            hass.bus.async_fire("frontend_panels_updated")
+        from homeassistant.components import frontend
+        
+        # Use the frontend component to remove the panel
+        if panel_name in hass.data.get("frontend_panels", {}):
+            frontend.async_remove_panel(hass, panel_name)
             _LOGGER.info("Removed frontend panel: %s", panel_name)
     except Exception as e:
         _LOGGER.warning("Could not remove frontend panel %s: %s", panel_name, e)
@@ -138,14 +139,18 @@ async def async_register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
     
     # Automatically register the panel using Home Assistant's frontend API
     try:
-        # Use the async_register_built_in_panel method directly
-        await hass.async_add_executor_job(
-            _register_frontend_panel,
+        # Import and use frontend component properly
+        from homeassistant.components import frontend
+        
+        # Register the panel asynchronously
+        frontend.async_register_built_in_panel(
             hass,
-            panel_name,
-            title,
-            icon,
-            panel_url
+            component_name="iframe",
+            sidebar_title=title,
+            sidebar_icon=icon,
+            frontend_url_path=panel_name,
+            config={"url": panel_url, "title": title},
+            require_admin=False,
         )
         _LOGGER.info("Successfully registered Tududi panel: %s", title)
     except Exception as e:
@@ -163,40 +168,4 @@ panel_custom:
     require_admin: false""", panel_name, title, icon, panel_name, panel_url)
 
 
-def _register_frontend_panel(hass: HomeAssistant, panel_name: str, title: str, icon: str, panel_url: str) -> None:
-    """Register panel with frontend synchronously."""
-    try:
-        # Access the frontend component and register the panel
-        frontend = hass.components.frontend
-        if hasattr(frontend, 'async_register_built_in_panel'):
-            # Call the registration function directly
-            frontend.async_register_built_in_panel(
-                hass,
-                component_name="iframe",
-                sidebar_title=title,
-                sidebar_icon=icon,
-                frontend_url_path=panel_name,
-                config={"url": panel_url, "title": title},
-                require_admin=False,
-            )
-        else:
-            # Alternative approach using the panel data structure
-            if not hasattr(hass.data, "frontend_panels"):
-                hass.data["frontend_panels"] = {}
-            
-            hass.data["frontend_panels"][panel_name] = {
-                "component_name": "iframe", 
-                "sidebar_title": title,
-                "sidebar_icon": icon,
-                "frontend_url_path": panel_name,
-                "config": {"url": panel_url, "title": title},
-                "require_admin": False,
-            }
-            
-            # Trigger frontend refresh if possible
-            hass.bus.async_fire("frontend_panels_updated")
-            
-    except Exception as e:
-        _LOGGER.error("Failed to register frontend panel: %s", e)
-        raise
 
