@@ -19,7 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
-        vol.Required(CONF_URL): cv.url,
+        vol.Required(CONF_URL): cv.string,
         vol.Optional(CONF_TITLE, default="Tududi"): cv.string,
         vol.Optional(CONF_ICON, default="mdi:clipboard-text"): cv.string,
     }
@@ -29,8 +29,18 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 def validate_url(url: str) -> bool:
     """Validate the URL format."""
     try:
+        # Strip whitespace and ensure it's a string
+        url = str(url).strip()
+        if not url:
+            return False
+            
         result = urlparse(url)
-        return all([result.scheme, result.netloc])
+        # Check that we have both scheme and netloc, and scheme is http/https
+        return (
+            result.scheme in ("http", "https") 
+            and result.netloc 
+            and len(result.netloc) > 0
+        )
     except Exception:
         return False
 
@@ -118,7 +128,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         current_data = self.config_entry.data
         schema = vol.Schema(
             {
-                vol.Required(CONF_URL, default=current_data.get(CONF_URL, "")): cv.url,
+                vol.Required(CONF_URL, default=current_data.get(CONF_URL, "")): cv.string,
                 vol.Optional(
                     CONF_TITLE, default=current_data.get(CONF_TITLE, "Tududi")
                 ): cv.string,
