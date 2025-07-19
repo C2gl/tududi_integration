@@ -1,8 +1,21 @@
-# INFO
-A HACS plugin to add [Tududi](https://github.com/chrisvel/tududi) as a sidebar panel in Home Assistant. 
+# TuDuDi HACS Integration
+
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
+[![GitHub release](https://img.shields.io/github/release/c2gl/tududi_HACS.svg)](https://github.com/c2gl/tududi_HACS/releases)
+[![GitHub issues](https://img.shields.io/github/issues/c2gl/tududi_HACS.svg)](https://github.com/c2gl/tududi_HACS/issues)
+
+A HACS integration to add [Tududi](https://github.com/chrisvel/tududi) as a sidebar panel in Home Assistant. 
 This integration embeds your Tududi server in a convenient sidebar panel with full configuration through the Home Assistant UI.
 
-# Installation 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=c2gl&repository=tududi_HACS&category=integration)
+
+## Requirements
+
+- **Home Assistant**: Version 2023.1.0 or newer
+- **HACS**: Home Assistant Community Store installed
+- **Tududi Server**: A running [Tududi](https://github.com/chrisvel/tududi) instance
+
+## Installation 
 ## HACS Instructions
 1. Install HACS in Home Assistant if not already done.
    To do so, please refer to [HACS install guide](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs)
@@ -46,6 +59,14 @@ add_header Content-Security-Policy "frame-ancestors 'self' [your_home_assistant_
 
 Replace `[your_home_assistant_url]` with your actual Home Assistant URL (e.g., `http://homeassistant.local:8123`).
 
+## SSL/HTTPS Configuration
+
+If you're using HTTPS with self-signed certificates, you may see SSL warnings in the logs. To resolve this:
+
+1. **Recommended**: Use HTTP for local network access (e.g., `http://192.168.1.100:3000`)
+2. **Alternative**: Configure your Tududi server with a proper SSL certificate
+3. **For advanced users**: You can configure certificate verification in your setup
+
 ## Features
 - ✅ **Easy Setup**: Configure through Home Assistant UI - no manual file editing needed
 - ✅ **Multiple Instances**: Add multiple Tududi servers as separate panels
@@ -59,11 +80,21 @@ Replace `[your_home_assistant_url]` with your actual Home Assistant URL (e.g., `
 1. Make sure you've restarted Home Assistant after installation
 2. Check that the integration is properly configured in **Settings** → **Devices & Services**
 3. Verify your Tududi server URL is accessible from your Home Assistant instance
+4. Check the Home Assistant logs for any error messages related to "tududi_hacs"
+
+### SSL/HTTPS Warnings
+- If you see SSL warnings in the logs, consider using HTTP instead of HTTPS for local access
+- Ensure your certificates are properly configured if using HTTPS
 
 ### Iframe Errors
 - If you see "X-Frame-Options" errors, check the nginx configuration section above
 - Ensure your Tududi server allows iframe embedding
 - Test the URL directly in a browser to confirm it's accessible
+
+### Integration Not Found
+- Make sure HACS is properly installed and configured
+- Verify the custom repository was added correctly to HACS
+- Restart Home Assistant and check HACS again
 
 ### Multiple Instances
 Each Tududi URL can only be configured once. If you want to add the same server with different settings, you'll need to use a slightly different URL (e.g., add a query parameter).
@@ -77,19 +108,48 @@ To change your Tududi URL, panel title, or icon:
 
 The panel will update immediately without requiring a restart.
 
-# Try to enjoy when not too buggy 😅
+## Version History
 
-# bug reports
-please use the template provided when reporting a bug, 
-if you can, trying to provide as much info as possible would be great 
+### v0.2.1
+- ✅ **Fixed**: Resolved "HomeAssistant object has no attribute 'components'" errors
+- ✅ **Improved**: Better frontend component integration
+- ✅ **Added**: Minimum Home Assistant version requirement (2023.1.0)
+- ✅ **Enhanced**: More robust panel registration and cleanup
 
-# helping out the project
-feel free to try and help by making your pull request, (don't forget to make your own fork first!)
+### v0.2.0
+- ✅ **Added**: Config flow for easy setup through UI
+- ✅ **Added**: Multiple instance support
+- ✅ **Added**: Custom panel titles and icons
+- ✅ **Added**: Options flow for updating configuration
 
-sorry if my code is non working or painfull to read, i am not a def and learning as i do. anny help is welcome and greatly apreciated.
+---
 
-if you have a issue with anything, feel free to let me know in a constructive and respectfull way. but keep in mind i was left unsupervised
+## Contributing
 
-# credits where credits are due
-- this entire prokect only exists as a bridge for the previously amazing [Tududi](https://github.com/chrisvel/tududi) project
-- the use of [HACS.io](https://www.hacs.xyz/) that greatly simplifies this and eases the use
+Feel free to contribute by making pull requests! (Don't forget to make your own fork first!)
+
+Sorry if my code is non-working or painful to read - I am not a developer and learning as I go. Any help is welcome and greatly appreciated.
+
+If you have an issue with anything, feel free to let me know in a constructive and respectful way, but keep in mind I was left unsupervised! 😅
+
+## Bug Reports
+
+Please use the template provided when reporting a bug. If you can, try to provide as much info as possible - it would be great!
+
+## Credits
+
+- This entire project only exists as a bridge for the amazing [Tududi](https://github.com/chrisvel/tududi) project
+- Thanks to [HACS.io](https://www.hacs.xyz/) that greatly simplifies distribution and eases the use
+- Appreciation to the Home Assistant community for guidance and support
+
+---
+
+## Support
+
+If you find this integration helpful, consider:
+- ⭐ Starring this repository
+- 🐛 Reporting bugs and issues
+- 💡 Suggesting new features
+- 🤝 Contributing code improvements
+
+**Try to enjoy when not too buggy!** 😅
