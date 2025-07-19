@@ -110,17 +110,15 @@ The panel will update immediately without requiring a restart.
 
 ## Version History
 
-### v0.2.1
+### v0.1.0
 - ✅ **Fixed**: Resolved "HomeAssistant object has no attribute 'components'" errors
 - ✅ **Improved**: Better frontend component integration
 - ✅ **Added**: Minimum Home Assistant version requirement (2023.1.0)
+- ✅ **Added**: HA fronted components to have it automatically in sidetab
 - ✅ **Enhanced**: More robust panel registration and cleanup
 
-### v0.2.0
-- ✅ **Added**: Config flow for easy setup through UI
-- ✅ **Added**: Multiple instance support
-- ✅ **Added**: Custom panel titles and icons
-- ✅ **Added**: Options flow for updating configuration
+### v0.0.1
+- ✅ **Added**: minnimal hand configured webwrap
 
 ---
 
