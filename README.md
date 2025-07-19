@@ -141,6 +141,7 @@ Please use the template provided when reporting a bug. If you can, try to provid
 - This entire project only exists as a bridge for the amazing [Tududi](https://github.com/chrisvel/tududi) project
 - Thanks to [HACS.io](https://www.hacs.xyz/) that greatly simplifies distribution and eases the use
 - Appreciation to the Home Assistant community for guidance and support
+- claudeai to help troubleshoot and explain me how programming works
 
 ---
 
