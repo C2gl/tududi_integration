@@ -1,130 +1,124 @@
-"""Tududi web wrapper integration for Home Assistant."""
-import os
-import logging
-from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.components.frontend import async_register_built_in_panel
-from homeassistant.components.http import HomeAssistantView
-from homeassistant.components.http.static import StaticPathConfig
-from aiohttp import web
+"""Tududi HACS integration for Home Assistant."""
+from __future__ import annotations
 
-from .const import DOMAIN, DEFAULT_URL
+import logging
+import os
+from pathlib import Path
+
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType
+
+from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON
 
 _LOGGER = logging.getLogger(__name__)
 
-# Path to the custom panel HTML file
-PANEL_DIR = os.path.join(os.path.dirname(__file__), "panel")
+PLATFORMS: list[str] = []
 
-async def async_setup(hass: HomeAssistant, config):
-    """Set up the Tududi component."""
-    # Register the panel
-    async_register_built_in_panel(
-        hass,
-        component_name="custom",
-        sidebar_title="Tududi",
-        sidebar_icon="mdi:calendar-check",
-        frontend_url_path=DOMAIN,
-        require_admin=False,
-        config={
-            "_panel_custom": {
-                "name": "tududi-panel",
-                "embed_iframe": True,
-                "trust_external": True,
-                "module_url": f"/{DOMAIN}_panel/tududi-panel.js",
-            }
-        },
-    )
 
-    # Register static directory for panel files - using the async method
-    await hass.http.async_register_static_paths([
-        StaticPathConfig(
-            f"/{DOMAIN}_panel", 
-            PANEL_DIR, 
-            cache_headers=False
-        )
-    ])
-
-    # Register the iframe view
-    hass.http.register_view(TududiIframeView())
-
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Set up the Tududi HACS component."""
     return True
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up Tududi from a config entry."""
-    # Store entry data in hass.data
-    if DOMAIN not in hass.data:
-        hass.data[DOMAIN] = {}
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up Tududi HACS from a config entry."""
+    hass.data.setdefault(DOMAIN, {})
     
+    # Store the config entry data
     hass.data[DOMAIN][entry.entry_id] = entry.data
     
-    # Make data available to our panel JS
-    hass.http.register_view(TududiConfigView(entry))
+    # Register the frontend panel
+    await async_register_panel(hass, entry)
+    
+    # Set up options update listener
+    entry.async_on_unload(entry.add_update_listener(async_update_options))
     
     return True
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+
+async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Update options."""
+    # Unregister the old panel
+    await async_unregister_panel(hass, entry)
+    
+    # Register the new panel with updated config
+    await async_register_panel(hass, entry)
+
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    # Remove entry data from hass.data
-    if DOMAIN in hass.data and entry.entry_id in hass.data[DOMAIN]:
-        hass.data[DOMAIN].pop(entry.entry_id)
+    # Remove the panel
+    await async_unregister_panel(hass, entry)
+    
+    # Clean up stored data
+    hass.data[DOMAIN].pop(entry.entry_id, None)
     
     return True
 
-class TududiConfigView(HomeAssistantView):
-    """View to provide configuration data to the panel."""
+
+async def async_unregister_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Unregister the panel and clean up files."""
+    panel_name = f"tududi_{entry.entry_id}"
     
-    requires_auth = True
-    url = "/api/tududi_hacs/config"
-    name = "api:tududi_hacs:config"
+    # Remove the panel from frontend
+    if hasattr(hass.components, 'frontend'):
+        try:
+            hass.components.frontend.async_remove_panel(panel_name)
+        except Exception as e:
+            _LOGGER.warning("Could not remove panel %s: %s", panel_name, e)
     
-    def __init__(self, config_entry):
-        """Initialize with config entry."""
-        self.config_entry = config_entry
-        
-    async def get(self, request):
-        """Return the configuration data."""
-        return web.json_response({
-            "url": self.config_entry.data.get("url", DEFAULT_URL)
-        })
+    # Clean up the HTML file
+    try:
+        panel_file = Path(hass.config.path("www")) / "tududi_hacs" / f"panel_{entry.entry_id}.html"
+        if panel_file.exists():
+            panel_file.unlink()
+    except Exception as e:
+        _LOGGER.warning("Could not remove panel file: %s", e)
 
-class TududiIframeView(HomeAssistantView):
-    """View for serving the Tududi iframe."""
 
-    requires_auth = False
-    url = "/tududi/iframe"
-    name = "tududi:iframe"
-
-    async def get(self, request):
-        """Return the iframe to the Tududi website."""
-        # Get the first config entry
-        entries = request.app["hass"].config_entries.async_entries(DOMAIN)
-        if entries:
-            url = entries[0].data.get("url", DEFAULT_URL)
-        else:
-            url = DEFAULT_URL
-            
-        html = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Tududi</title>
-            <style>
-                body, html {{
-                    margin: 0;
-                    padding: 0;
-                    height: 100%;
-                    overflow: hidden;
-                }}
-                iframe {{
-                    width: 100%;
-                    height: 100%;
-                    border: none;
-                }}
-            </style>
-        </head>
-        <body>
-            <iframe src="{url}" allow="fullscreen"></iframe>
-        </body>
-        </html>
-        """
-        return web.Response(text=html, content_type="text/html")
+async def async_register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Register the Tududi panel."""
+    url = entry.data[CONF_URL]
+    title = entry.data.get(CONF_TITLE, "Tududi")
+    icon = entry.data.get(CONF_ICON, "mdi:clipboard-text")
+    
+    # Create the HTML content with the configured URL
+    panel_html_content = f"""<!DOCTYPE html>
+<html>
+  <head>
+    <title>{title} HA Panel</title>
+    <meta charset="UTF-8" />
+  </head>
+  <body style="margin:0;padding:0;height:100vh;width:100vw;overflow:hidden">
+    <iframe src="{url}" width="100%" height="100%" style="border:none;"></iframe>
+  </body>
+</html>"""
+    
+    # Ensure the www directory exists
+    www_dir = Path(hass.config.path("www"))
+    panel_dir = www_dir / "tududi_hacs"
+    panel_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Write the panel HTML file
+    panel_file = panel_dir / f"panel_{entry.entry_id}.html"
+    with open(panel_file, "w", encoding="utf-8") as f:
+        f.write(panel_html_content)
+    
+    # Register the panel
+    panel_name = f"tududi_{entry.entry_id}"
+    panel_url = f"/local/tududi_hacs/panel_{entry.entry_id}.html"
+    
+    hass.components.frontend.async_register_built_in_panel(
+        component_name="iframe",
+        sidebar_title=title,
+        sidebar_icon=icon,
+        frontend_url_path=panel_name,
+        config={
+            "url": panel_url,
+            "title": title,
+        },
+        require_admin=False,
+    )
+    
+    _LOGGER.info("Registered Tududi panel: %s at %s", title, url)
