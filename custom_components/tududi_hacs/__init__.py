@@ -61,16 +61,23 @@ async def async_unregister_panel(hass: HomeAssistant, entry: ConfigEntry) -> Non
     """Unregister the panel and clean up files."""
     panel_name = f"tududi_{entry.entry_id}"
     
-    # Remove the panel from frontend data
-    if "frontend_panels" in hass.data and panel_name in hass.data["frontend_panels"]:
-        hass.data["frontend_panels"].pop(panel_name, None)
-    
-    # Remove the panel from frontend component
+    # Remove stored panel configuration
     try:
-        from homeassistant.components import frontend
-        frontend.async_remove_panel(hass, panel_name)
+        if DOMAIN + "_panels" in hass.data and entry.entry_id in hass.data[DOMAIN + "_panels"]:
+            panel_info = hass.data[DOMAIN + "_panels"].pop(entry.entry_id)
+            _LOGGER.info("Removed panel configuration for: %s", panel_info.get("title", panel_name))
     except Exception as e:
-        _LOGGER.warning("Could not remove panel %s: %s", panel_name, e)
+        _LOGGER.warning("Could not remove panel configuration %s: %s", panel_name, e)
+    
+    # Remove from frontend panels
+    try:
+        if hasattr(hass.data, "frontend_panels") and panel_name in hass.data.get("frontend_panels", {}):
+            hass.data["frontend_panels"].pop(panel_name, None)
+            # Trigger frontend refresh
+            hass.bus.async_fire("frontend_panels_updated")
+            _LOGGER.info("Removed frontend panel: %s", panel_name)
+    except Exception as e:
+        _LOGGER.warning("Could not remove frontend panel %s: %s", panel_name, e)
     
     # Clean up the HTML file asynchronously
     def remove_panel_file():
@@ -79,6 +86,7 @@ async def async_unregister_panel(hass: HomeAssistant, entry: ConfigEntry) -> Non
             panel_file = Path(hass.config.path("www")) / "tududi_hacs" / f"panel_{entry.entry_id}.html"
             if panel_file.exists():
                 panel_file.unlink()
+                _LOGGER.info("Removed panel file: %s", panel_file)
         except Exception as e:
             _LOGGER.warning("Could not remove panel file: %s", e)
     
@@ -116,32 +124,79 @@ async def async_register_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
     
     await hass.async_add_executor_job(create_panel_files)
     
-    # Register the panel using the correct frontend API
+    # Create panel configuration
     panel_name = f"tududi_{entry.entry_id}"
     panel_url = f"/local/tududi_hacs/panel_{entry.entry_id}.html"
     
-    # Use the frontend service to register the panel
-    hass.data.setdefault("frontend_panels", {})
-    hass.data["frontend_panels"][panel_name] = {
-        "component_name": "iframe",
-        "sidebar_title": title,
-        "sidebar_icon": icon,
-        "frontend_url_path": panel_name,
-        "config": {"url": panel_url, "title": title},
-        "require_admin": False,
+    # Store panel configuration
+    hass.data.setdefault(DOMAIN + "_panels", {})[entry.entry_id] = {
+        "name": panel_name,
+        "title": title,
+        "icon": icon,
+        "url": panel_url,
     }
     
-    # Register with frontend component
-    if hasattr(hass.components, "frontend"):
-        from homeassistant.components import frontend
-        frontend.async_register_built_in_panel(
+    # Automatically register the panel using Home Assistant's frontend API
+    try:
+        # Use the async_register_built_in_panel method directly
+        await hass.async_add_executor_job(
+            _register_frontend_panel,
             hass,
-            component_name="iframe",
-            sidebar_title=title,
-            sidebar_icon=icon,
-            frontend_url_path=panel_name,
-            config={"url": panel_url, "title": title},
-            require_admin=False,
+            panel_name,
+            title,
+            icon,
+            panel_url
         )
-    
-    _LOGGER.info("Registered Tududi panel: %s at %s", title, url)
+        _LOGGER.info("Successfully registered Tududi panel: %s", title)
+    except Exception as e:
+        _LOGGER.error("Failed to register panel automatically: %s", e)
+        # Fallback: show manual configuration
+        _LOGGER.error("Please add the following to your configuration.yaml manually:")
+        _LOGGER.error("""
+panel_custom:
+  - name: %s
+    sidebar_title: %s
+    sidebar_icon: %s
+    url_path: %s
+    module_url: %s
+    embed_iframe: true
+    require_admin: false""", panel_name, title, icon, panel_name, panel_url)
+
+
+def _register_frontend_panel(hass: HomeAssistant, panel_name: str, title: str, icon: str, panel_url: str) -> None:
+    """Register panel with frontend synchronously."""
+    try:
+        # Access the frontend component and register the panel
+        frontend = hass.components.frontend
+        if hasattr(frontend, 'async_register_built_in_panel'):
+            # Call the registration function directly
+            frontend.async_register_built_in_panel(
+                hass,
+                component_name="iframe",
+                sidebar_title=title,
+                sidebar_icon=icon,
+                frontend_url_path=panel_name,
+                config={"url": panel_url, "title": title},
+                require_admin=False,
+            )
+        else:
+            # Alternative approach using the panel data structure
+            if not hasattr(hass.data, "frontend_panels"):
+                hass.data["frontend_panels"] = {}
+            
+            hass.data["frontend_panels"][panel_name] = {
+                "component_name": "iframe", 
+                "sidebar_title": title,
+                "sidebar_icon": icon,
+                "frontend_url_path": panel_name,
+                "config": {"url": panel_url, "title": title},
+                "require_admin": False,
+            }
+            
+            # Trigger frontend refresh if possible
+            hass.bus.async_fire("frontend_panels_updated")
+            
+    except Exception as e:
+        _LOGGER.error("Failed to register frontend panel: %s", e)
+        raise
+
