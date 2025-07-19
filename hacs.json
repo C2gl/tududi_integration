@@ -1,8 +1,9 @@
 {
-    "name": "Tududi Hacs",
+    "name": "Tududi HACS",
     "content_in_root": false,
-    "filename": "panel.html",
     "render_readme": true,
-    "domains": ["lovelace"],
-    "country": "be"
+    "domains": ["tududi_hacs"],
+    "country": "be",
+    "hacs": "1.6.0",
+    "homeassistant": "2023.1.0"
 }
