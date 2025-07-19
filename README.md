@@ -9,13 +9,13 @@ This integration embeds your Tududi server in a convenient sidebar panel with fu
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=c2gl&repository=tududi_HACS&category=integration)
 
-## Requirements
+# Requirements
 
 - **Home Assistant**: Version 2023.1.0 or newer
 - **HACS**: Home Assistant Community Store installed
-- **Tududi Server**: A running [Tududi](https://github.com/chrisvel/tududi) instance
+- **Tududi Server**: A running [Tududi](https://github.com/chrisvel/tududi) instance in an external docker. please follow Tududi's repo linked above with instructions on how to get this running
 
-## Installation 
+# Installation 
 ## HACS Instructions
 1. Install HACS in Home Assistant if not already done.
    To do so, please refer to [HACS install guide](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs)
