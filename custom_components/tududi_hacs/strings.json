@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure Tududi Panel",
+        "description": "Enter your Tududi server details to create a sidebar panel in Home Assistant.",
+        "data": {
+          "url": "Tududi Server URL",
+          "title": "Panel Title (shown in sidebar)",
+          "icon": "Panel Icon (MDI icon name)"
+        },
+        "data_description": {
+          "url": "The full URL to your Tududi server (e.g., http://192.168.1.100:3000)",
+          "title": "The title that will appear in the Home Assistant sidebar",
+          "icon": "Material Design Icon name (e.g., mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the Tududi server. Please check the URL and try again.",
+      "invalid_url": "The URL format is invalid. Please enter a valid URL (e.g., http://192.168.1.100:3000)",
+      "unknown": "An unexpected error occurred. Please try again."
+    },
+    "abort": {
+      "already_configured": "This Tududi URL is already configured. Each URL can only be configured once."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configure Tududi Panel",
+        "description": "Update your Tududi panel settings. Changes will take effect immediately.",
+        "data": {
+          "url": "Tududi Server URL",
+          "title": "Panel Title (shown in sidebar)",
+          "icon": "Panel Icon (MDI icon name)"
+        },
+        "data_description": {
+          "url": "The full URL to your Tududi server (e.g., http://192.168.1.100:3000)",
+          "title": "The title that will appear in the Home Assistant sidebar",
+          "icon": "Material Design Icon name (e.g., mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "The URL format is invalid. Please enter a valid URL (e.g., http://192.168.1.100:3000)",
+      "unknown": "An unexpected error occurred. Please try again."
+    }
+  },
+  "title": "Tududi HACS"
+}

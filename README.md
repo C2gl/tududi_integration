@@ -1,37 +1,81 @@
 # INFO
-a little HACS plugin to add [Tududi](https://github.com/chrisvel/tududi) as sidebar pannel in home assistant 
-all this will do is embed an exteral docker-hosted webpage
+A HACS plugin to add [Tududi](https://github.com/chrisvel/tududi) as a sidebar panel in Home Assistant. 
+This integration embeds your Tududi server in a convenient sidebar panel with full configuration through the Home Assistant UI.
 
+# Installation 
+## HACS Instructions
+1. Install HACS in Home Assistant if not already done.
+   To do so, please refer to [HACS install guide](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs)
+2. Copy the repo URL https://github.com/c2gl/tududi_HACS
+3. Add the repo in HACS as a custom repository
+4. Search for "TuDuDi HACS webpanel" in the HACS store
+5. Install the integration
+6. Restart Home Assistant
 
-# installation 
-## HACS instructions
-Install HACS in home assistant if not already done.
-To do so, please refer to [HACS install guide](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs)
-Copy the repo url https://github.com/c2gl/tududi_HACS
-Paste the repo in hacs
-Search for tududi_HACS in the HASC store
-Install the app 
-once installed, you should use visual studio plugin to eddit some configurations manually
+## Configuration
+After installation and restart:
 
-## configurations
-once tududi_hacs is installed you should see a `config/custom_components/tududi_hacs`
-in that folder there are two files you should **not** eddit
+1. Go to **Settings** → **Devices & Services**
+2. Click **"+ ADD INTEGRATION"**
+3. Search for **"Tududi HACS"**
+4. Enter your configuration:
+   - **Tududi Server URL**: The full URL to your Tududi server (e.g., `http://192.168.1.100:3000`)
+   - **Panel Title**: The title that will appear in the sidebar (default: "Tududi")
+   - **Panel Icon**: Material Design Icon name (default: "mdi:clipboard-text")
+5. Click **Submit**
 
-but under `/config/www` you should make a new folder if not already present, called `tududi_hacs` and in that file you are to add the `panel.html` file that you can find here in the [repo](https://github.com/C2gl/tududi_HACS/blob/main/www/tududi_hacs/panel.html)
+The Tududi panel will automatically appear in your Home Assistant sidebar!
 
-if the file was already automatically added by hacs, you just need to eddit the url to your tududi server
-on line 8, you are to eddit `"[your tududi irl]"` and paste in your own irl (do not forget to remove the brackets )
+### Multiple Instances
+You can add multiple Tududi instances by repeating the configuration process with different URLs.
 
-you are also to add the code in [configuration.yaml](https://github.com/C2gl/tududi_HACS/blob/main/configuration.yaml) to the `configuration.yaml` file in your home assistant to display the new tab in the sidebar. its also here that you can eddit the title and icon to your own liking.
+## Manual Configuration (Legacy)
+> **Note**: Manual configuration is no longer needed with the new config flow. The integration now handles everything automatically.
+
+If you still prefer manual configuration, you can:
+1. Edit the `panel.html` file in `/config/www/tududi_hacs/` to set your URL
+2. Add the panel configuration to your `configuration.yaml`
 
 ## nginx configuration 
-if your tududi instance is behind NGINX, you probably will see an error telling you that home assistant is not permitted to the url of your tududi. 
-this is because nginx blocks iframe by default. this can be worked around by adding these lines to your config or advanced settings 
+If your Tududi instance is behind NGINX, you might see an error saying that Home Assistant is not permitted to access your Tududi URL. This is because nginx blocks iframe embedding by default. You can work around this by adding these lines to your nginx configuration:
 
-```yaml
+```nginx
 add_header X-Frame-Options "ALLOW-FROM [your_home_assistant_url]";
 add_header Content-Security-Policy "frame-ancestors 'self' [your_home_assistant_url]";
 ```
+
+Replace `[your_home_assistant_url]` with your actual Home Assistant URL (e.g., `http://homeassistant.local:8123`).
+
+## Features
+- ✅ **Easy Setup**: Configure through Home Assistant UI - no manual file editing needed
+- ✅ **Multiple Instances**: Add multiple Tududi servers as separate panels
+- ✅ **Customizable**: Set custom panel titles and icons
+- ✅ **Auto-Update**: Change settings anytime through the integration options
+- ✅ **Clean Uninstall**: Automatically removes panels and files when uninstalled
+
+## Troubleshooting
+
+### Panel Not Appearing
+1. Make sure you've restarted Home Assistant after installation
+2. Check that the integration is properly configured in **Settings** → **Devices & Services**
+3. Verify your Tududi server URL is accessible from your Home Assistant instance
+
+### Iframe Errors
+- If you see "X-Frame-Options" errors, check the nginx configuration section above
+- Ensure your Tududi server allows iframe embedding
+- Test the URL directly in a browser to confirm it's accessible
+
+### Multiple Instances
+Each Tududi URL can only be configured once. If you want to add the same server with different settings, you'll need to use a slightly different URL (e.g., add a query parameter).
+
+## Updating Configuration
+To change your Tududi URL, panel title, or icon:
+1. Go to **Settings** → **Devices & Services**
+2. Find "Tududi HACS" in your integrations
+3. Click **Configure**
+4. Update your settings and click **Submit**
+
+The panel will update immediately without requiring a restart.
 
 # Try to enjoy when not too buggy 😅
 

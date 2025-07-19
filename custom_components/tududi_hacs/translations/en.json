@@ -1,0 +1,40 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure Tududi Panel",
+        "description": "Set up your Tududi integration",
+        "data": {
+          "url": "Tududi Server URL",
+          "title": "Panel Title",
+          "icon": "Panel Icon"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to Tududi server",
+      "invalid_url": "Invalid URL format",
+      "unknown": "Unexpected error occurred"
+    },
+    "abort": {
+      "already_configured": "This Tududi URL is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configure Tududi Panel",
+        "description": "Update your Tududi panel settings",
+        "data": {
+          "url": "Tududi Server URL",
+          "title": "Panel Title",
+          "icon": "Panel Icon"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Invalid URL format",
+      "unknown": "Unexpected error occurred"
+    }
+  }
+}
