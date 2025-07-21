@@ -21,7 +21,7 @@ This integration embeds your Tududi server in a convenient sidebar panel with fu
    To do so, please refer to [HACS install guide](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs)
 2. Copy the repo URL https://github.com/c2gl/tududi_HACS
 3. Add the repo in HACS as a custom repository
-4. Search for "TuDuDi HACS webpanel" in the HACS store
+4. Search for "Tududi HACS webpanel" in the HACS store
 5. Install the integration
 6. Restart Home Assistant
 
@@ -145,7 +145,7 @@ Please use the template provided when reporting a bug. If you can, try to provid
 
 ## Support
 
-If you find this integration helpful, consider:
+If you find this integration helpful, pkease consider:
 - ⭐ Starring this repository
 - 🐛 Reporting bugs and issues
 - 💡 Suggesting new features
