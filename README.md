@@ -81,6 +81,7 @@ If you're using HTTPS with self-signed certificates, you may see SSL warnings in
 2. Check that the integration is properly configured in **Settings** → **Devices & Services**
 3. Verify your Tududi server URL is accessible from your Home Assistant instance
 4. Check the Home Assistant logs for any error messages related to "tududi_hacs"
+5. Make sure you deleted browser cache and refreshed your browser tab.
 
 ### SSL/HTTPS Warnings
 - If you see SSL warnings in the logs, consider using HTTP instead of HTTPS for local access
