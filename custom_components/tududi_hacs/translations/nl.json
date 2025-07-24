@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configureer Tududi Paneel",
+        "description": "Voer uw Tududi server gegevens in om een zijbalk paneel in Home Assistant te maken.",
+        "data": {
+          "url": "Tududi Server URL",
+          "title": "Paneel Titel (getoond in zijbalk)",
+          "icon": "Paneel Icoon (MDI icoon naam)"
+        },
+        "data_description": {
+          "url": "De volledige URL naar uw Tududi server (bijv. http://192.168.1.100:3000)",
+          "title": "De titel die wordt weergegeven in de Home Assistant zijbalk",
+          "icon": "Material Design Icoon naam (bijv. mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kan geen verbinding maken met de Tududi server. Controleer de URL en probeer het opnieuw.",
+      "invalid_url": "Het URL formaat is ongeldig. Voer een geldige URL in (bijv. http://192.168.1.100:3000)",
+      "unknown": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+    },
+    "abort": {
+      "already_configured": "Deze Tududi URL is al geconfigureerd. Elke URL kan slechts één keer worden geconfigureerd."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configureer Tududi Paneel",
+        "description": "Werk uw Tududi paneel instellingen bij. Wijzigingen worden onmiddellijk van kracht.",
+        "data": {
+          "url": "Tududi Server URL",
+          "title": "Paneel Titel (getoond in zijbalk)",
+          "icon": "Paneel Icoon (MDI icoon naam)"
+        },
+        "data_description": {
+          "url": "De volledige URL naar uw Tududi server (bijv. http://192.168.1.100:3000)",
+          "title": "De titel die wordt weergegeven in de Home Assistant zijbalk",
+          "icon": "Material Design Icoon naam (bijv. mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Het URL formaat is ongeldig. Voer een geldige URL in (bijv. http://192.168.1.100:3000)",
+      "unknown": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
+    }
+  },
+  "title": "Tududi HACS"
+}
