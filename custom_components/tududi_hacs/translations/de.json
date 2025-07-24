@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tududi Panel konfigurieren",
+        "description": "Geben Sie Ihre Tududi-Serverdetails ein, um ein Seitenleisten-Panel in Home Assistant zu erstellen.",
+        "data": {
+          "url": "Tududi-Server-URL",
+          "title": "Panel-Titel (in Seitenleiste angezeigt)",
+          "icon": "Panel-Symbol (MDI-Symbol-Name)"
+        },
+        "data_description": {
+          "url": "Die vollständige URL zu Ihrem Tududi-Server (z.B. http://192.168.1.100:3000)",
+          "title": "Der Titel, der in der Home Assistant Seitenleiste erscheint",
+          "icon": "Material Design Icon-Name (z.B. mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zum Tududi-Server fehlgeschlagen. Bitte überprüfen Sie die URL und versuchen Sie es erneut.",
+      "invalid_url": "Das URL-Format ist ungültig. Bitte geben Sie eine gültige URL ein (z.B. http://192.168.1.100:3000)",
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "abort": {
+      "already_configured": "Diese Tududi-URL ist bereits konfiguriert. Jede URL kann nur einmal konfiguriert werden."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tududi Panel konfigurieren",
+        "description": "Aktualisieren Sie Ihre Tududi-Panel-Einstellungen. Änderungen werden sofort wirksam.",
+        "data": {
+          "url": "Tududi-Server-URL",
+          "title": "Panel-Titel (in Seitenleiste angezeigt)",
+          "icon": "Panel-Symbol (MDI-Symbol-Name)"
+        },
+        "data_description": {
+          "url": "Die vollständige URL zu Ihrem Tududi-Server (z.B. http://192.168.1.100:3000)",
+          "title": "Der Titel, der in der Home Assistant Seitenleiste erscheint",
+          "icon": "Material Design Icon-Name (z.B. mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Das URL-Format ist ungültig. Bitte geben Sie eine gültige URL ein (z.B. http://192.168.1.100:3000)",
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    }
+  },
+  "title": "Tududi HACS"
+}
