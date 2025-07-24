@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurer le panel Tududi",
+        "description": "Saisissez les détails de votre serveur Tududi pour créer un panel dans la barre latérale de Home Assistant.",
+        "data": {
+          "url": "URL du serveur Tududi",
+          "title": "Titre du panel (affiché dans la barre latérale)",
+          "icon": "Icône du panel (nom d'icône MDI)"
+        },
+        "data_description": {
+          "url": "L'URL complète de votre serveur Tududi (ex: http://192.168.1.100:3000)",
+          "title": "Le titre qui apparaîtra dans la barre latérale de Home Assistant",
+          "icon": "Nom d'icône Material Design (ex: mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Échec de la connexion au serveur Tududi. Veuillez vérifier l'URL et réessayer.",
+      "invalid_url": "Le format d'URL est invalide. Veuillez saisir une URL valide (ex: http://192.168.1.100:3000)",
+      "unknown": "Une erreur inattendue est survenue. Veuillez réessayer."
+    },
+    "abort": {
+      "already_configured": "Cette URL Tududi est déjà configurée. Chaque URL ne peut être configurée qu'une seule fois."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configurer le panel Tududi",
+        "description": "Mettre à jour les paramètres de votre panel Tududi. Les modifications prendront effet immédiatement.",
+        "data": {
+          "url": "URL du serveur Tududi",
+          "title": "Titre du panel (affiché dans la barre latérale)",
+          "icon": "Icône du panel (nom d'icône MDI)"
+        },
+        "data_description": {
+          "url": "L'URL complète de votre serveur Tududi (ex: http://192.168.1.100:3000)",
+          "title": "Le titre qui apparaîtra dans la barre latérale de Home Assistant",
+          "icon": "Nom d'icône Material Design (ex: mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "Le format d'URL est invalide. Veuillez saisir une URL valide (ex: http://192.168.1.100:3000)",
+      "unknown": "Une erreur inattendue est survenue. Veuillez réessayer."
+    }
+  },
+  "title": "Tududi HACS"
+}
