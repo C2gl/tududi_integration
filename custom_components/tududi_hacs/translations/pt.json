@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar Painel Tududi",
+        "description": "Insira os detalhes do seu servidor Tududi para criar um painel lateral no Home Assistant.",
+        "data": {
+          "url": "URL do Servidor Tududi",
+          "title": "Título do Painel (mostrado na barra lateral)",
+          "icon": "Ícone do Painel (nome do ícone MDI)"
+        },
+        "data_description": {
+          "url": "A URL completa do seu servidor Tududi (ex: http://192.168.1.100:3000)",
+          "title": "O título que aparecerá na barra lateral do Home Assistant",
+          "icon": "Nome do ícone Material Design (ex: mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Falha ao conectar com o servidor Tududi. Verifique a URL e tente novamente.",
+      "invalid_url": "O formato da URL é inválido. Insira uma URL válida (ex: http://192.168.1.100:3000)",
+      "unknown": "Ocorreu um erro inesperado. Tente novamente."
+    },
+    "abort": {
+      "already_configured": "Esta URL do Tududi já está configurada. Cada URL só pode ser configurada uma vez."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configurar Painel Tududi",
+        "description": "Atualize as configurações do seu painel Tududi. As alterações entrarão em vigor imediatamente.",
+        "data": {
+          "url": "URL do Servidor Tududi",
+          "title": "Título do Painel (mostrado na barra lateral)",
+          "icon": "Ícone do Painel (nome do ícone MDI)"
+        },
+        "data_description": {
+          "url": "A URL completa do seu servidor Tududi (ex: http://192.168.1.100:3000)",
+          "title": "O título que aparecerá na barra lateral do Home Assistant",
+          "icon": "Nome do ícone Material Design (ex: mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "O formato da URL é inválido. Insira uma URL válida (ex: http://192.168.1.100:3000)",
+      "unknown": "Ocorreu um erro inesperado. Tente novamente."
+    }
+  },
+  "title": "Tududi HACS"
+}
