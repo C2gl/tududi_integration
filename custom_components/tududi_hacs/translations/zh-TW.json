@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "設定 Tududi 面板",
+        "description": "輸入您的 Tududi 伺服器詳細資訊，以在 Home Assistant 中建立側邊欄面板。",
+        "data": {
+          "url": "Tududi 伺服器 URL",
+          "title": "面板標題（顯示在側邊欄中）",
+          "icon": "面板圖示（MDI 圖示名稱）"
+        },
+        "data_description": {
+          "url": "您的 Tududi 伺服器的完整 URL（例如：http://192.168.1.100:3000）",
+          "title": "將在 Home Assistant 側邊欄中顯示的標題",
+          "icon": "Material Design 圖示名稱（例如：mdi:clipboard-text, mdi:format-list-checks）"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "無法連接到 Tududi 伺服器。請檢查 URL 並重試。",
+      "invalid_url": "URL 格式無效。請輸入有效的 URL（例如：http://192.168.1.100:3000）",
+      "unknown": "發生意外錯誤。請重試。"
+    },
+    "abort": {
+      "already_configured": "此 Tududi URL 已設定。每個 URL 只能設定一次。"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "設定 Tududi 面板",
+        "description": "更新您的 Tududi 面板設定。變更將立即生效。",
+        "data": {
+          "url": "Tududi 伺服器 URL",
+          "title": "面板標題（顯示在側邊欄中）",
+          "icon": "面板圖示（MDI 圖示名稱）"
+        },
+        "data_description": {
+          "url": "您的 Tududi 伺服器的完整 URL（例如：http://192.168.1.100:3000）",
+          "title": "將在 Home Assistant 側邊欄中顯示的標題",
+          "icon": "Material Design 圖示名稱（例如：mdi:clipboard-text, mdi:format-list-checks）"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "URL 格式無效。請輸入有效的 URL（例如：http://192.168.1.100:3000）",
+      "unknown": "發生意外錯誤。請重試。"
+    }
+  },
+  "title": "Tududi HACS"
+}

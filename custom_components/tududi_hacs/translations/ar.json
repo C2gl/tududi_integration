@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "تكوين لوحة Tududi",
+        "description": "أدخل تفاصيل خادم Tududi الخاص بك لإنشاء لوحة جانبية في Home Assistant.",
+        "data": {
+          "url": "رابط خادم Tududi",
+          "title": "عنوان اللوحة (يظهر في الشريط الجانبي)",
+          "icon": "أيقونة اللوحة (اسم أيقونة MDI)"
+        },
+        "data_description": {
+          "url": "الرابط الكامل لخادم Tududi الخاص بك (مثال: http://192.168.1.100:3000)",
+          "title": "العنوان الذي سيظهر في الشريط الجانبي لـ Home Assistant",
+          "icon": "اسم أيقونة Material Design (مثال: mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "فشل في الاتصال بخادم Tududi. يرجى التحقق من الرابط والمحاولة مرة أخرى.",
+      "invalid_url": "تنسيق الرابط غير صحيح. يرجى إدخال رابط صحيح (مثال: http://192.168.1.100:3000)",
+      "unknown": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
+    },
+    "abort": {
+      "already_configured": "رابط Tududi هذا مُكوّن مسبقاً. يمكن تكوين كل رابط مرة واحدة فقط."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "تكوين لوحة Tududi",
+        "description": "حدّث إعدادات لوحة Tududi. ستسري التغييرات فوراً.",
+        "data": {
+          "url": "رابط خادم Tududi",
+          "title": "عنوان اللوحة (يظهر في الشريط الجانبي)",
+          "icon": "أيقونة اللوحة (اسم أيقونة MDI)"
+        },
+        "data_description": {
+          "url": "الرابط الكامل لخادم Tududi الخاص بك (مثال: http://192.168.1.100:3000)",
+          "title": "العنوان الذي سيظهر في الشريط الجانبي لـ Home Assistant",
+          "icon": "اسم أيقونة Material Design (مثال: mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "تنسيق الرابط غير صحيح. يرجى إدخال رابط صحيح (مثال: http://192.168.1.100:3000)",
+      "unknown": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى."
+    }
+  },
+  "title": "Tududi HACS"
+}
