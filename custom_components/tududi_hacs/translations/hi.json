@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Tududi पैनल कॉन्फ़िगर करें",
+        "description": "Home Assistant में साइडबार पैनल बनाने के लिए अपने Tududi सर्वर की जानकारी दर्ज करें।",
+        "data": {
+          "url": "Tududi सर्वर URL",
+          "title": "पैनल शीर्षक (साइडबार में दिखाया गया)",
+          "icon": "पैनल आइकन (MDI आइकन नाम)"
+        },
+        "data_description": {
+          "url": "आपके Tududi सर्वर का पूरा URL (उदाहरण: http://192.168.1.100:3000)",
+          "title": "वह शीर्षक जो Home Assistant साइडबार में दिखाई देगा",
+          "icon": "Material Design आइकन नाम (उदाहरण: mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Tududi सर्वर से कनेक्ट करने में विफल। कृपया URL जांचें और फिर से कोशिश करें।",
+      "invalid_url": "URL प्रारूप अमान्य है। कृपया एक वैध URL दर्ज करें (उदाहरण: http://192.168.1.100:3000)",
+      "unknown": "एक अप्रत्याशित त्रुटि हुई। कृपया फिर से कोशिश करें।"
+    },
+    "abort": {
+      "already_configured": "यह Tududi URL पहले से कॉन्फ़िगर है। प्रत्येक URL केवल एक बार कॉन्फ़िगर किया जा सकता है।"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tududi पैनल कॉन्फ़िगर करें",
+        "description": "अपने Tududi पैनल सेटिंग्स को अपडेट करें। परिवर्तन तुरंत प्रभावी होंगे।",
+        "data": {
+          "url": "Tududi सर्वर URL",
+          "title": "पैनल शीर्षक (साइडबार में दिखाया गया)",
+          "icon": "पैनल आइकन (MDI आइकन नाम)"
+        },
+        "data_description": {
+          "url": "आपके Tududi सर्वर का पूरा URL (उदाहरण: http://192.168.1.100:3000)",
+          "title": "वह शीर्षक जो Home Assistant साइडबार में दिखाई देगा",
+          "icon": "Material Design आइकन नाम (उदाहरण: mdi:clipboard-text, mdi:format-list-checks)"
+        }
+      }
+    },
+    "error": {
+      "invalid_url": "URL प्रारूप अमान्य है। कृपया एक वैध URL दर्ज करें (उदाहरण: http://192.168.1.100:3000)",
+      "unknown": "एक अप्रत्याशित त्रुटि हुई। कृपया फिर से कोशिश करें।"
+    }
+  },
+  "title": "Tududi HACS"
+}
