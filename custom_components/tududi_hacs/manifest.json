@@ -4,7 +4,7 @@
     "issue_tracker": "https://github.com/c2gl/tududi_HACS/issues",
     "codeowners": ["@c2gl"],
     "name": "TuDuDi HACS webpanel",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "dependencies": ["frontend"],
     "requirements": ["aiohttp"],
     "config_flow": true,

@@ -123,7 +123,10 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
             else:
-                # Update the config entry
+                # Update the config entry data
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry, data=user_input
+                )
                 return self.async_create_entry(title="", data=user_input)
 
         # Pre-fill with current values
@@ -136,6 +139,12 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 ): cv.string,
                 vol.Optional(
                     CONF_ICON, default=current_data.get(CONF_ICON, "mdi:clipboard-text")
+                ): cv.string,
+                vol.Optional(
+                    CONF_USERNAME, default=current_data.get(CONF_USERNAME, "")
+                ): cv.string,
+                vol.Optional(
+                    CONF_PASSWORD, default=current_data.get(CONF_PASSWORD, "")
                 ): cv.string,
             }
         )
