@@ -2,9 +2,9 @@ name: Python Code Quality Checks
 
 on:
   push:
-    branches: [ main, master, sensor ]
+    branches: [ main, dev, ]
   pull_request:
-    branches: [ main, master, sensor ]
+    branches: [ main, dev, ]
   workflow_dispatch:
 
 jobs:
