@@ -13,7 +13,7 @@ from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS: list[str] = []
+PLATFORMS: list[str] = ["sensor"]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -30,6 +30,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     
     # Register the frontend panel
     await async_register_panel(hass, entry)
+    
+    # Set up sensor platform
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     
     # Set up options update listener
     entry.async_on_unload(entry.add_update_listener(async_update_options))
@@ -48,13 +51,16 @@ async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
+    # Unload sensor platform
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    
     # Remove the panel
     await async_unregister_panel(hass, entry)
     
     # Clean up stored data
     hass.data[DOMAIN].pop(entry.entry_id, None)
     
-    return True
+    return unload_ok
 
 
 async def async_unregister_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:

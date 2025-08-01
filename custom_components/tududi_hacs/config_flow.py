@@ -13,7 +13,7 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 import homeassistant.helpers.config_validation as cv
 
-from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON
+from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON, CONF_USERNAME, CONF_PASSWORD
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,6 +22,8 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_URL): cv.string,
         vol.Optional(CONF_TITLE, default="Tududi"): cv.string,
         vol.Optional(CONF_ICON, default="mdi:clipboard-text"): cv.string,
+        vol.Optional(CONF_USERNAME): cv.string,
+        vol.Optional(CONF_PASSWORD): cv.string,
     }
 )
 
