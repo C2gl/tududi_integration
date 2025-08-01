@@ -63,7 +63,7 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         self.base_url = base_url.rstrip("/")
         self.username = username
         self.password = password
-        self._session_cookies = None
+        self._session = None
         
         super().__init__(
             hass,
@@ -95,22 +95,28 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
             return True
 
         try:
-            # Login to Tududi
-            login_url = f"{self.base_url}/api/auth/login"
+            # Login to Tududi - based on the actual API endpoints
+            login_url = f"{self.base_url}/api/login"
             login_data = {
                 "email": self.username,
                 "password": self.password,
             }
             
-            async with session.post(login_url, json=login_data) as response:
+            headers = {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            }
+            
+            async with session.post(login_url, json=login_data, headers=headers) as response:
                 if response.status == 200:
-                    # Store session cookies for future requests
-                    self._session_cookies = session.cookie_jar
                     _LOGGER.debug("Successfully authenticated with Tududi")
+                    # Session cookies should be automatically stored in the session
                     return True
                 else:
+                    response_text = await response.text()
                     _LOGGER.error(
-                        "Failed to authenticate with Tududi: %s", response.status
+                        "Failed to authenticate with Tududi: %s - %s", 
+                        response.status, response_text
                     )
                     return False
                     
@@ -118,49 +124,63 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
             _LOGGER.error("Authentication error: %s", exception)
             return False
 
+    async def async_shutdown(self) -> None:
+        """Close the session when coordinator is shutting down."""
+        if self._session and not self._session.closed:
+            await self._session.close()
+
     async def _fetch_tududi_data(self) -> Dict[str, Any]:
         """Fetch data from Tududi API."""
-        connector = aiohttp.TCPConnector(force_close=True, enable_cleanup_closed=True)
-        
-        async with aiohttp.ClientSession(connector=connector) as session:
-            # Restore session cookies if available
-            if self._session_cookies:
-                session.cookie_jar = self._session_cookies
-            
+        # Create or reuse session
+        if not self._session or self._session.closed:
+            connector = aiohttp.TCPConnector(force_close=True, enable_cleanup_closed=True)
+            self._session = aiohttp.ClientSession(connector=connector)
+
+        try:
             # Authenticate if credentials are provided
-            if not await self._authenticate(session):
+            if not await self._authenticate(self._session):
                 raise UpdateFailed("Authentication failed")
 
-            try:
-                # Fetch tasks with metrics
-                tasks_url = f"{self.base_url}/api/tasks?type=upcoming&order_by=due_date"
-                
-                async with session.get(tasks_url) as response:
-                    if response.status == 401:
-                        # Session expired, try to re-authenticate
-                        if await self._authenticate(session):
-                            async with session.get(tasks_url) as retry_response:
-                                if retry_response.status == 200:
-                                    data = await retry_response.json()
-                                else:
-                                    raise UpdateFailed(f"API request failed: {retry_response.status}")
-                        else:
-                            raise UpdateFailed("Authentication failed")
-                    elif response.status == 200:
-                        data = await response.json()
+            # Fetch tasks - use the correct API endpoint
+            tasks_url = f"{self.base_url}/api/tasks"
+            
+            headers = {
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest",
+            }
+            
+            async with self._session.get(tasks_url, headers=headers) as response:
+                if response.status == 401:
+                    # Session expired, try to re-authenticate
+                    if await self._authenticate(self._session):
+                        async with self._session.get(tasks_url, headers=headers) as retry_response:
+                            if retry_response.status == 200:
+                                data = await retry_response.json()
+                            else:
+                                response_text = await retry_response.text()
+                                raise UpdateFailed(f"API request failed: {retry_response.status} - {response_text}")
                     else:
-                        raise UpdateFailed(f"API request failed: {response.status}")
+                        raise UpdateFailed("Authentication failed")
+                elif response.status == 200:
+                    data = await response.json()
+                else:
+                    response_text = await response.text()
+                    raise UpdateFailed(f"API request failed: {response.status} - {response_text}")
 
-                return await self._process_tududi_data(data)
-                
-            except Exception as exception:
-                _LOGGER.error("Error fetching Tududi data: %s", exception)
-                raise UpdateFailed(f"Error fetching data: {exception}")
+            return await self._process_tududi_data(data)
+            
+        except Exception as exception:
+            _LOGGER.error("Error fetching Tududi data: %s", exception)
+            raise UpdateFailed(f"Error fetching data: {exception}")
 
     async def _process_tududi_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process the fetched Tududi data."""
+        _LOGGER.debug("Processing Tududi API response: %s", data)
+        
         tasks = data.get("tasks", [])
         metrics = data.get("metrics", {})
+        
+        _LOGGER.debug("Found %d tasks in API response", len(tasks))
         
         # Find the next upcoming todo
         next_todo = None
@@ -171,8 +191,8 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         today_date = now.date()
         
         for task in tasks:
-            # Skip completed tasks
-            if task.get("status") in [2, "done"]:  # 2 is DONE status
+        # Skip completed tasks (status 2 = DONE in Tududi)
+            if task.get("status") == 2:
                 continue
                 
             task_due_date = task.get("due_date")
@@ -218,17 +238,23 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         suggested_tasks = metrics.get("suggested_tasks", [])
         if not next_todo and suggested_tasks:
             # Filter out completed suggested tasks
-            active_suggested = [t for t in suggested_tasks if t.get("status") not in [2, "done"]]
+            active_suggested = [t for t in suggested_tasks if t.get("status") != 2]
             if active_suggested:
                 next_todo = active_suggested[0]
         
-        return {
+        result = {
             "next_todo": next_todo,
             "upcoming_todos_count": len(upcoming_todos),
             "today_todos_count": len(today_todos),
             "all_tasks": tasks,
             "metrics": metrics,
         }
+        
+        _LOGGER.debug("Processed data - Next todo: %s, Upcoming: %d, Today: %d", 
+                     next_todo.get("name") if next_todo else None,
+                     len(upcoming_todos), len(today_todos))
+        
+        return result
 
 
 async def async_setup_entry(
@@ -330,8 +356,8 @@ class TududiSensor(CoordinatorEntity, SensorEntity):
                     "priority_name": self._get_priority_name(next_todo.get("priority", 0)),
                     "status": next_todo.get("status"),
                     "status_name": self._get_status_name(next_todo.get("status", 0)),
-                    "project": next_todo.get("project", {}).get("name") if next_todo.get("project") else None,
-                    "tags": [tag.get("name") for tag in next_todo.get("tags", [])],
+                    "project": next_todo.get("Project", {}).get("name") if next_todo.get("Project") else None,
+                    "tags": [tag.get("name") for tag in next_todo.get("Tags", [])],
                     "today": next_todo.get("today", False),
                     "created_at": next_todo.get("created_at"),
                     "updated_at": next_todo.get("updated_at"),
