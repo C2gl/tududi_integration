@@ -5,8 +5,11 @@ import logging
 import os
 from pathlib import Path
 
+import voluptuous as vol
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
 from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON
@@ -14,6 +17,9 @@ from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[str] = ["sensor"]
+
+# Config schema - this integration can only be set up via config entries
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
