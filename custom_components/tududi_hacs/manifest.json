@@ -4,9 +4,9 @@
     "issue_tracker": "https://github.com/c2gl/tududi_HACS/issues",
     "codeowners": ["@c2gl"],
     "name": "TuDuDi HACS webpanel",
-    "version": "0.2.1",
+    "version": "0.3.1",
     "dependencies": ["frontend"],
-    "requirements": [],
+    "requirements": ["aiohttp"],
     "config_flow": true,
     "iot_class": "local_polling",
     "homeassistant": "2023.1.0"
