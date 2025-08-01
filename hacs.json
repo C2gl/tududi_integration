@@ -3,6 +3,5 @@
     "content_in_root": false,
     "render_readme": true,
     "country": "be",
-    "hacs": "1.6.0",
-    "minimum_ha_version": "2023.1.0"
+    "hacs": "1.6.0"
 }
