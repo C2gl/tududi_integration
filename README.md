@@ -1,21 +1,3 @@
-# TuDuDi HACS Integ## Installation 
-## HACS Instructions
-1. Install HACS in Home Assistant if not already done.
-   To do so, please refer to [HACS install guide](https://www.hacs.xyz/docs/use/download/download/#to-download-hacs)
-2. Copy the repo URL https://github.com/c2gl/tududi_HACS
-3. Add the repo in HACS as a custom repository
-4. Search for "Tududi HACS webpanel" in the HACS store
-5. Install the integration
-6. Restart Home Assistant
-
-### Installation Verification
-After installation, you can verify that everything is properly installed by running this command in your Home Assistant config directory:
-
-```bash
-python verify_installation.py
-```
-
-This script will check that all required files are present and have valid syntax.
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
 [![GitHub release](https://img.shields.io/github/release/c2gl/tududi_HACS.svg)](https://github.com/c2gl/tududi_HACS/releases)
 [![GitHub issues](https://img.shields.io/github/issues/c2gl/tududi_HACS.svg)](https://github.com/c2gl/tududi_HACS/issues)
@@ -62,9 +44,11 @@ The Tududi panel will automatically appear in your Home Assistant sidebar!
 ### Sensor Features
 If you provide authentication credentials (username/email and password), the integration will also create sensors that track your todos:
 
-- **Next Todo**: Shows the name of your next upcoming todo with details like due date, priority, and project
-- **Upcoming Todos Count**: Number of upcoming todos (excluding today's todos)
-- **Today Todos Count**: Number of todos scheduled for today
+- **Next Todo**: Shows your next upcoming todo
+- **Upcoming Todos Count**: Number of upcoming todos
+- **Today Todos Count**: Number of today's todos
+
+These sensors can be used in dashboards, automations, and notifications. For detailed examples and configuration, see the [Setup Guide](SETUP.md).
 
 ### Multiple Instances
 You can add multiple Tududi instances by repeating the configuration process with different URLs.
@@ -98,85 +82,33 @@ If you're using HTTPS with self-signed certificates, you may see SSL warnings in
 - ✅ **Easy Setup**: Configure through Home Assistant UI - no manual file editing needed
 - ✅ **Multiple Instances**: Add multiple Tududi servers as separate panels
 - ✅ **Customizable**: Set custom panel titles and icons
+- ✅ **Todo Sensors**: Track your todos with smart sensors (optional with login)
 - ✅ **Auto-Update**: Change settings anytime through the integration options
 - ✅ **Clean Uninstall**: Automatically removes panels and files when uninstalled
-- ✅ **Todo Sensors**: Track your next upcoming todo, todo counts, and task details
-- ✅ **Smart Prioritization**: Sensors prioritize today's todos and high-priority tasks
-- ✅ **Rich Attributes**: Sensors include detailed task information like due dates, projects, tags, and priority
-## Sensor Usage Examples
 
-Once configured with authentication credentials, you can use the todo sensors in automations, scripts, and dashboards:
+## Quick Start
 
-### Lovelace Card Example
-```yaml
-type: entity
-entity: sensor.tududi_next_todo
-name: Next Todo
-icon: mdi:clipboard-text
-```
-
-### Automation Example
-```yaml
-automation:
-  - alias: "Announce Next Todo"
-    trigger:
-      - platform: state
-        entity_id: sensor.tududi_next_todo
-    condition:
-      - condition: template
-        value_template: "{{ trigger.to_state.state != 'No upcoming todos' }}"
-    action:
-      - service: notify.mobile_app_your_phone
-        data:
-          title: "Next Todo"
-          message: "{{ states('sensor.tududi_next_todo') }}"
-```
-
-### Template Example
-```yaml
-template:
-  - sensor:
-      - name: "Todo Summary"
-        state: >
-          {% set next = states('sensor.tududi_next_todo') %}
-          {% set today_count = states('sensor.tududi_today_todos_count') | int %}
-          {% set upcoming_count = states('sensor.tududi_upcoming_todos_count') | int %}
-          Today: {{ today_count }}, Upcoming: {{ upcoming_count }}
-          Next: {{ next }}
-```
+Want detailed setup examples and advanced configurations? Check out our [**Setup Guide**](SETUP.md) for:
+- Sensor configuration examples
+- Dashboard card templates
+- Automation ideas
+- Troubleshooting tips
 
 ## Troubleshooting
 
 ### Panel Not Appearing
-1. Make sure you've restarted Home Assistant after installation
-2. Check that the integration is properly configured in **Settings** → **Devices & Services**
-3. Verify your Tududi server URL is accessible from your Home Assistant instance
-4. Check the Home Assistant logs for any error messages related to "tududi_hacs"
-5. Make sure you deleted browser cache and refreshed your browser tab.
+1. Restart Home Assistant after installation
+2. Check **Settings** → **Devices & Services** for proper configuration
+3. Verify your Tududi server URL is accessible
+4. Clear browser cache and refresh
 
-### SSL/HTTPS Warnings
-- If you see SSL warnings in the logs, consider using HTTP instead of HTTPS for local access
-- Ensure your certificates are properly configured if using HTTPS
+### Common Issues
+- **Integration Not Found**: Make sure HACS is installed and the custom repository is added
+- **SSL/HTTPS Warnings**: Use HTTP for local access or ensure proper SSL certificates
+- **Iframe Errors**: Check the nginx configuration section above
+- **Sensors Not Working**: Provide valid credentials and wait a few minutes for first data fetch
 
-### Iframe Errors
-- If you see "X-Frame-Options" errors, check the nginx configuration section above
-- Ensure your Tududi server allows iframe embedding
-- Test the URL directly in a browser to confirm it's accessible
-
-### Integration Not Found
-- Make sure HACS is properly installed and configured
-- Verify the custom repository was added correctly to HACS
-- Restart Home Assistant and check HACS again
-
-### Sensors Not Working
-- Ensure you provided valid username/email and password during configuration
-- Check that your Tududi credentials allow API access
-- Verify the Tududi server is accessible from Home Assistant
-- Check Home Assistant logs for authentication errors
-- The integration polls every 5 minutes - wait a few minutes after setup
-
-### Multiple Instances
-Each Tududi URL can only be configured once. If you want to add the same server with different settings, you'll need to use a slightly different URL (e.g., add a query parameter).
+For detailed troubleshooting and advanced configuration, see the [Setup Guide](SETUP.md).
 
 ## Updating Configuration
 To change your Tududi URL, panel title, or icon:
