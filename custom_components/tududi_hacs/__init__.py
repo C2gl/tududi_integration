@@ -42,11 +42,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Update options."""
-    # Unregister the old panel
-    await async_unregister_panel(hass, entry)
-    
-    # Register the new panel with updated config
-    await async_register_panel(hass, entry)
+    # Reload the config entry to apply new settings
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

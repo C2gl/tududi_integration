@@ -21,6 +21,7 @@ from homeassistant.helpers.update_coordinator import (
 from .const import (
     DOMAIN,
     CONF_URL,
+    CONF_TITLE,
     CONF_USERNAME,
     CONF_PASSWORD,
     SENSOR_UPDATE_INTERVAL,
@@ -77,7 +78,15 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
             async with async_timeout.timeout(SENSOR_TIMEOUT):
                 return await self._fetch_tududi_data()
         except Exception as exception:
-            raise UpdateFailed(f"Error communicating with Tududi API: {exception}")
+            _LOGGER.warning("Error communicating with Tududi API: %s", exception)
+            # Return empty data instead of raising exception so sensors stay available
+            return {
+                "next_todo": None,
+                "upcoming_todos_count": 0,
+                "today_todos_count": 0,
+                "all_tasks": [],
+                "metrics": {},
+            }
 
     async def _authenticate(self, session: aiohttp.ClientSession) -> bool:
         """Authenticate with Tududi server."""
@@ -236,14 +245,18 @@ async def async_setup_entry(
         hass, base_url, username, password
     )
     
-    # Fetch initial data so we have data when entities are added
-    await coordinator.async_config_entry_first_refresh()
+    # Try to fetch initial data, but don't fail if it doesn't work
+    try:
+        await coordinator.async_config_entry_first_refresh()
+    except Exception as err:
+        _LOGGER.warning("Failed to fetch initial data: %s", err)
+        # Continue anyway - sensors will show as unavailable until data is fetched
     
     entities = []
     for description in SENSOR_TYPES:
         entities.append(TududiSensor(coordinator, description, config_entry))
     
-    async_add_entities(entities, update_before_add=True)
+    async_add_entities(entities, update_before_add=False)
 
 
 class TududiSensor(CoordinatorEntity, SensorEntity):
@@ -266,7 +279,7 @@ class TududiSensor(CoordinatorEntity, SensorEntity):
         # Set device info
         self._attr_device_info = {
             "identifiers": {(DOMAIN, config_entry.entry_id)},
-            "name": config_entry.data.get(CONF_URL, "Tududi"),
+            "name": config_entry.data.get("title", "Tududi"),
             "manufacturer": "Tududi",
             "model": "Task Manager",
             "sw_version": "1.0",
@@ -275,7 +288,7 @@ class TududiSensor(CoordinatorEntity, SensorEntity):
     @property
     def name(self) -> str:
         """Return the name of the sensor."""
-        title = self._config_entry.data.get("title", "Tududi")
+        title = self._config_entry.data.get(CONF_TITLE, "Tududi")
         return f"{title} {self.entity_description.name}"
 
     @property
