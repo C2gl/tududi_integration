@@ -99,6 +99,7 @@ def main():
         print(f"\n❌ Translation validation failed:")
         for error in errors:
             print(f"  - {error}")
+        print(f"\n💡 Please update translation files before merging.")
         sys.exit(1)
     else:
         print(f"\n✅ All translation files are complete!")
