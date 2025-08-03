@@ -3,16 +3,20 @@
     "step": {
       "user": {
         "title": "Configureer Tududi Paneel",
-        "description": "Voer uw Tududi server gegevens in om een zijbalk paneel in Home Assistant te maken.",
+        "description": "Voer uw Tududi server gegevens in om een zijbalk paneel en sensoren in Home Assistant te maken.",
         "data": {
           "url": "Tududi Server URL",
           "title": "Paneel Titel (getoond in zijbalk)",
-          "icon": "Paneel Icoon (MDI icoon naam)"
+          "icon": "Paneel Icoon (MDI icoon naam)",
+          "username": "Gebruikersnaam/E-mail (voor sensoren)",
+          "password": "Wachtwoord (voor sensoren)"
         },
         "data_description": {
           "url": "De volledige URL naar uw Tududi server (bijv. http://192.168.1.100:3000)",
           "title": "De titel die wordt weergegeven in de Home Assistant zijbalk",
-          "icon": "Material Design Icoon naam (bijv. mdi:clipboard-text, mdi:format-list-checks)"
+          "icon": "Material Design Icoon naam (bijv. mdi:clipboard-text, mdi:format-list-checks)",
+          "username": "Uw Tududi gebruikersnaam/e-mail (optioneel, vereist voor todo sensoren)",
+          "password": "Uw Tududi wachtwoord (optioneel, vereist voor todo sensoren)"
         }
       }
     },

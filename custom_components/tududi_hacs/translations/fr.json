@@ -3,16 +3,20 @@
     "step": {
       "user": {
         "title": "Configurer le panel Tududi",
-        "description": "Saisissez les détails de votre serveur Tududi pour créer un panel dans la barre latérale de Home Assistant.",
+        "description": "Saisissez les détails de votre serveur Tududi pour créer un panel dans la barre latérale et des capteurs dans Home Assistant.",
         "data": {
           "url": "URL du serveur Tududi",
           "title": "Titre du panel (affiché dans la barre latérale)",
-          "icon": "Icône du panel (nom d'icône MDI)"
+          "icon": "Icône du panel (nom d'icône MDI)",
+          "username": "Nom d'utilisateur/E-mail (pour les capteurs)",
+          "password": "Mot de passe (pour les capteurs)"
         },
         "data_description": {
           "url": "L'URL complète de votre serveur Tududi (ex: http://192.168.1.100:3000)",
           "title": "Le titre qui apparaîtra dans la barre latérale de Home Assistant",
-          "icon": "Nom d'icône Material Design (ex: mdi:clipboard-text, mdi:format-list-checks)"
+          "icon": "Nom d'icône Material Design (ex: mdi:clipboard-text, mdi:format-list-checks)",
+          "username": "Votre nom d'utilisateur/e-mail Tududi (optionnel, requis pour les capteurs de tâches)",
+          "password": "Votre mot de passe Tududi (optionnel, requis pour les capteurs de tâches)"
         }
       }
     },
