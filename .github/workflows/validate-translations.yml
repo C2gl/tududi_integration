@@ -2,9 +2,9 @@ name: Validate Translations
 
 on:
   push:
-    branches: [ main, master, translation-check ]
+    branches: [ main, dev]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, dev ]
     paths:
       - 'custom_components/tududi_hacs/strings.json'
       - 'custom_components/tududi_hacs/translations/*.json'
