@@ -22,6 +22,26 @@ jobs:
         python-version: '3.11'
     
     - name: Validate translation completeness
+      id: validate
       run: |
         python .github/scripts/validate_translations.py
       continue-on-error: true
+    
+    - name: Create neutral check status
+      if: steps.validate.outcome == 'failure'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          await github.rest.checks.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            name: 'Translation Validation (Neutral)',
+            head_sha: context.sha,
+            status: 'completed',
+            conclusion: 'neutral',
+            output: {
+              title: 'Translation validation completed with warnings',
+              summary: 'Some translation files are missing keys, but this is not blocking the merge.',
+              text: 'Please check the validation output above for details on missing translation keys.'
+            }
+          });
