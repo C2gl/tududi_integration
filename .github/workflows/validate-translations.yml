@@ -2,7 +2,7 @@ name: Validate Translations
 
 on:
   push:
-    branches: [ main, dev]
+    branches: [ main, dev ]
   pull_request:
     branches: [ main, dev ]
     paths:
