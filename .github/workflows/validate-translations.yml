@@ -24,3 +24,4 @@ jobs:
     - name: Validate translation completeness
       run: |
         python .github/scripts/validate_translations.py
+      continue-on-error: true

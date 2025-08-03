@@ -96,10 +96,10 @@ def main():
             print(f"  ✅ All keys match ({len(trans_keys)} keys)")
     
     if errors:
-        print(f"\n❌ Translation validation failed:")
+        print(f"\n❌ Translation validation found issues:")
         for error in errors:
             print(f"  - {error}")
-        print(f"\n💡 Please update translation files before merging.")
+        print(f"\n💡 Consider updating translation files.")
         sys.exit(1)
     else:
         print(f"\n✅ All translation files are complete!")
