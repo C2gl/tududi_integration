@@ -67,8 +67,8 @@ def main():
     errors = []
     
     for trans_file in translation_files:
-        lang_code = trans_file.stem
-        print(f"\n🌐 Checking {lang_code}...")
+        file_name = trans_file.stem  # Just the filename without .json extension
+        print(f"\n📄 Checking {file_name}.json...")
         
         trans_data = load_json_file(trans_file)
         if trans_data is None:
@@ -85,7 +85,7 @@ def main():
             print(f"  ❌ Missing {len(missing_keys)} keys:")
             for key in sorted(missing_keys):
                 print(f"    - {key}")
-            errors.append(f"{lang_code}: missing {len(missing_keys)} keys")
+            errors.append(f"{file_name}.json: missing {len(missing_keys)} keys")
         
         if extra_keys:
             print(f"  ⚠️  Extra {len(extra_keys)} keys (not in base):")
