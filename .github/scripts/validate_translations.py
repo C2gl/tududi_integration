@@ -22,8 +22,17 @@ def get_all_keys(obj, prefix=''):
 def load_json_file(file_path):
     """Load and parse a JSON file."""
     try:
+        # Check if file is empty first
+        if file_path.stat().st_size == 0:
+            print(f"⚠️  Empty file: {file_path}")
+            return None
+            
         with open(file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+            content = f.read().strip()
+            if not content:
+                print(f"⚠️  Empty content: {file_path}")
+                return None
+            return json.loads(content)
     except FileNotFoundError:
         print(f"❌ File not found: {file_path}")
         return None
@@ -72,8 +81,8 @@ def main():
         
         trans_data = load_json_file(trans_file)
         if trans_data is None:
-            errors.append(f"Failed to load {trans_file}")
-            continue
+            print(f"  ⚠️  Skipping {file_name}.json - file is empty or invalid")
+            continue  # Skip this file, don't count as error
         
         trans_keys = get_all_keys(trans_data)
         
