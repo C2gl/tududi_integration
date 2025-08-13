@@ -1,0 +1,26 @@
+name: Validate Translations
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+    paths:
+      - 'custom_components/tududi_hacs/strings.json'
+      - 'custom_components/tududi_hacs/translations/*.json'
+
+jobs:
+  validate-translations:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Validate translation completeness
+      run: |
+        python .github/scripts/validate_translations.py

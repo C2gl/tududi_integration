@@ -122,7 +122,7 @@ The panel will update immediately without requiring a restart.
 ## Version History
 
 ### v0.1.5
-- ✅ **Added**: the use of the tududi api to have custom Home Assistant sensors (see previous mention)
+- ✅ **Added**: the use of the tududi api to have custom Home Assistant sensors
 - ✅ **Improved**: more issue handeling 
 
 ### v0.1.0
