@@ -1,13 +1,13 @@
 {
     "domain": "tududi_hacs",
-    "documentation": "https://github.com/c2gl/tududi_HACS",
-    "issue_tracker": "https://github.com/c2gl/tududi_HACS/issues",
-    "codeowners": ["@c2gl"],
     "name": "TuDuDi HACS webpanel",
-    "version": "0.3.1",
-    "dependencies": ["frontend"],
-    "requirements": ["aiohttp"],
+    "codeowners": ["@C2gl"],
     "config_flow": true,
+    "dependencies": ["frontend"],
+    "documentation": "https://github.com/C2gl/tududi_HACS",
+    "integration_type": "service",
     "iot_class": "local_polling",
-    "homeassistant": "2023.1.0"
+    "issue_tracker": "https://github.com/C2gl/tududi_HACS/issues",
+    "requirements": ["aiohttp"],
+    "version": "0.3.1"
 }
