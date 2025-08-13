@@ -42,9 +42,9 @@ def load_json_file(file_path):
 
 def main():
     # Base strings file
-    base_strings_path = Path("custom_components/tududi_hacs/strings.json")
-    translations_dir = Path("custom_components/tududi_hacs/translations")
-    
+    base_strings_path = Path("custom_components/tududi_integration/strings.json")
+    translations_dir = Path("custom_components/tududi_integration/translations")
+
     if not base_strings_path.exists():
         print(f"❌ Base strings file not found: {base_strings_path}")
         sys.exit(1)
