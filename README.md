@@ -3,6 +3,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/c2gl/tududi_HACS.svg)](https://github.com/c2gl/tududi_HACS/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/c2gl/tududi_hacs.svg)](https://github.com/c2gl/tududi_hacs/pulls)
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/C2gl/tududi_HACS/total)](https://github.com/c2gl/tududi_HACS/releases)
+[![Validate](https://github.com/C2gl/tududi_HACS/actions/workflows/validate.yml/badge.svg)](https://github.com/C2gl/tududi_HACS/actions/workflows/validate.yml)
 
 A HACS integration to add [Tududi](https://github.com/chrisvel/tududi) as a sidebar panel in Home Assistant. 
 This integration embeds your Tududi server in a convenient sidebar panel with full configuration through the Home Assistant UI.
