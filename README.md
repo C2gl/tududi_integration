@@ -122,6 +122,9 @@ The panel will update immediately without requiring a restart.
 
 ## Version History
 
+### V0.2.0 
+- ✅ **Added**: finaly added to the official HACS store
+
 ### v0.1.5
 - ✅ **Added**: the use of the tududi api to have custom Home Assistant sensors
 - ✅ **Improved**: more issue handeling 
