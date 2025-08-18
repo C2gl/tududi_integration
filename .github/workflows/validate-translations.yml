@@ -1,16 +1,22 @@
 name: Validate Translations
 
 on:
+  push:
+    paths:
+      - 'custom_components/tududi_integration/strings.json'
+      - 'custom_components/tududi_integration/translations/*.json'
   pull_request:
     types: [opened, synchronize, labeled]
     # Run when PR is opened, updated, or labeled
-  # Only run if PR has 'translation' label
 
 jobs:
   validate-translations:
     runs-on: ubuntu-latest
-    # Only run if the PR has the 'translation' label
-    if: contains(github.event.pull_request.labels.*.name, 'translation')
+    # For PRs: only run if the PR has the 'translation' label
+    # For pushes: run automatically (already filtered by paths)
+    if: |
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'translation')) ||
+      (github.event_name == 'push')
     
     steps:
     - uses: actions/checkout@v4
