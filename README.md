@@ -149,6 +149,9 @@ Sorry if my code is non-working or painful to read - I am not a developer and le
 
 If you have an issue with anything, feel free to let me know in a constructive and respectful way, but keep in mind I was left unsupervised! 😅
 
+### Help to translate 
+If you see mistakes in a existing language, or wish to add your language? you can find the language files in "custom_components\tududi_integration\translations". Feel free to fork the repo and make a pull request with your added language
+
 ## Bug Reports
 
 Please use the template provided when reporting a bug. If you can, try to provide as much info as possible - it would be great!
