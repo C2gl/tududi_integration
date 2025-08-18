@@ -33,18 +33,19 @@ _LOGGER = logging.getLogger(__name__)
 SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
     SensorEntityDescription(
         key="next_todo",
-        name="Next Todo",
         icon="mdi:clipboard-text",
     ),
     SensorEntityDescription(
         key="upcoming_todos_count",
-        name="Upcoming Todos Count",
         icon="mdi:counter",
     ),
     SensorEntityDescription(
         key="today_todos_count",
-        name="Today Todos Count",
         icon="mdi:calendar-today",
+    ),
+    SensorEntityDescription(
+        key="total_todos_left",
+        icon="mdi:format-list-checks",
     ),
 )
 
@@ -84,6 +85,7 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
                 "next_todo": None,
                 "upcoming_todos_count": 0,
                 "today_todos_count": 0,
+                "total_todos_left": 0,
                 "all_tasks": [],
                 "metrics": {},
             }
@@ -186,6 +188,7 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         next_todo = None
         upcoming_todos = []
         today_todos = []
+        total_todos_left = 0
         
         now = datetime.now()
         today_date = now.date()
@@ -194,6 +197,9 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         # Skip completed tasks (status 2 = DONE in Tududi)
             if task.get("status") == 2:
                 continue
+                
+            # Count all non-completed tasks
+            total_todos_left += 1
                 
             task_due_date = task.get("due_date")
             task_name = task.get("name", "Unnamed Task")
@@ -246,13 +252,14 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
             "next_todo": next_todo,
             "upcoming_todos_count": len(upcoming_todos),
             "today_todos_count": len(today_todos),
+            "total_todos_left": total_todos_left,
             "all_tasks": tasks,
             "metrics": metrics,
         }
         
-        _LOGGER.debug("Processed data - Next todo: %s, Upcoming: %d, Today: %d", 
+        _LOGGER.debug("Processed data - Next todo: %s, Upcoming: %d, Today: %d, Total left: %d", 
                      next_todo.get("name") if next_todo else None,
-                     len(upcoming_todos), len(today_todos))
+                     len(upcoming_todos), len(today_todos), total_todos_left)
         
         return result
 
@@ -334,6 +341,9 @@ class TududiSensor(CoordinatorEntity, SensorEntity):
             
         elif self.entity_description.key == "today_todos_count":
             return self.coordinator.data.get("today_todos_count", 0)
+            
+        elif self.entity_description.key == "total_todos_left":
+            return self.coordinator.data.get("total_todos_left", 0)
             
         return None
 
