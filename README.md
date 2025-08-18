@@ -140,9 +140,9 @@ Sorry if my code is non-working or painful to read - I am not a developer and le
 If you have an issue with anything, feel free to let me know in a constructive and respectful way, but keep in mind I was left unsupervised! 😅
 
 ### Help to translate 
-If you see mistakes in a existing language, or wish to add your language? you can find the language files in "custom_components\tududi_integration\translations". Feel free to fork the repo and make a pull request with your added language.
+If you see mistakes in a existing language, or wish to add your language? you can find the language files in `custom_components\tududi_integration\translations`. Feel free to fork the repo and make a pull request with your added language.
 
-You can either do this by using the strings folder and adding your language strings. Or you can choose to coppy the "en.json" file that will always be kept up to date with developement of features and retype the strings you want.
+You can either do this by using the strings folder and adding your language strings. Or you can choose to coppy the `en.json` file that will always be kept up to date with developement of features and retype the strings you want.
 
 When adding a language a workflow will run to check all your strings, please make sure all strings have been completed for your added language before asking for a merge. 
 
