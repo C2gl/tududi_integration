@@ -51,16 +51,6 @@ If you provide authentication credentials (username/email and password), the int
 
 These sensors can be used in dashboards, automations, and notifications. For detailed examples and configuration, see the [Setup Guide](SETUP.md).
 
-### Multiple Instances
-You can add multiple Tududi instances by repeating the configuration process with different URLs.
-
-## Manual Configuration (Legacy)
-> **Note**: Manual configuration is no longer needed with the new config flow. The integration now handles everything automatically.
-
-If you still prefer manual configuration, you can:
-1. Edit the `panel.html` file in `/config/www/tududi_hacs/` to set your URL
-2. Add the panel configuration to your `configuration.yaml`
-
 ## nginx configuration 
 If your Tududi instance is behind NGINX, you might see an error saying that Home Assistant is not permitted to access your Tududi URL. This is because nginx blocks iframe embedding by default. You can work around this by adding these lines to your nginx configuration:
 
