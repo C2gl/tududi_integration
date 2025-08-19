@@ -1,4 +1,4 @@
-name: Validate Translations
+name: 🌍 Validate Translations
 
 on:
   push:
@@ -9,10 +9,12 @@ on:
     branches: [ main, dev ]
     paths:
       - 'custom_components/tududi_integration/strings.json'
+  types: [labeled]
       - 'custom_components/tududi_integration/translations/*.json'
 
 jobs:
   validate-translations:
+  if: contains(join(github.event.pull_request.labels.*.name, ','), 'translation')
     runs-on: ubuntu-latest
     
     steps:
