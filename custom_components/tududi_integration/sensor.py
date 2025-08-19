@@ -33,17 +33,17 @@ _LOGGER = logging.getLogger(__name__)
 SENSOR_TYPES: tuple[SensorEntityDescription, ...] = (
     SensorEntityDescription(
         key="next_todo",
-        name="Next Todo",
+        translation_key="next_todo",
         icon="mdi:clipboard-text",
     ),
     SensorEntityDescription(
         key="upcoming_todos_count",
-        name="Upcoming Todos Count",
+        translation_key="upcoming_todos_count",
         icon="mdi:counter",
     ),
     SensorEntityDescription(
         key="today_todos_count",
-        name="Today Todos Count",
+        translation_key="today_todos_count",
         icon="mdi:calendar-today",
     ),
 )
