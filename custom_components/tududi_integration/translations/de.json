@@ -51,5 +51,18 @@
       "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
     }
   },
+  "entity": {
+    "sensor": {
+      "next_todo": {
+        "name": "Nächste Aufgabe"
+      },
+      "upcoming_todos_count": {
+        "name": "Anzahl kommender Aufgaben"
+      },
+      "today_todos_count": {
+        "name": "Anzahl heutiger Aufgaben"
+      }
+    }
+  },
   "title": "Tududi Integration"
 }
