@@ -3,8 +3,12 @@ name: Python Code Quality Checks
 on:
   push:
     branches: [ main, dev, ]
+    paths:
+      - '**/*.py'
   pull_request:
     branches: [ main, dev, ]
+    paths:
+      - '**/*.py'
   workflow_dispatch:
 
 jobs:
