@@ -1,8 +1,10 @@
-name: Validate Translations
+name: 🌍 Validate Translations
 
 on:
   push:
-    branches: [ main, dev ]
+    paths:
+      - 'custom_components/tududi_integration/strings.json'
+      - 'custom_components/tududi_integration/translations/*.json'
   pull_request:
     branches: [ main, dev ]
     paths:
