@@ -1,4 +1,4 @@
-name: Validate Translations
+name: 🌍 Validate Translations
 
 on:
   push:
