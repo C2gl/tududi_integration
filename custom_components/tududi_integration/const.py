@@ -1,6 +1,6 @@
 """Constants for the Tududi HACS integration."""
 
-DOMAIN = "tududi_hacs"
+DOMAIN = "tududi_integration"
 
 # Configuration
 CONF_URL = "url"

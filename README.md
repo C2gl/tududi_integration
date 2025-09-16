@@ -3,6 +3,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/c2gl/tududi_HACS.svg)](https://github.com/c2gl/tududi_HACS/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/c2gl/tududi_hacs.svg)](https://github.com/c2gl/tududi_hacs/pulls)
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/C2gl/tududi_HACS/total)](https://github.com/c2gl/tududi_HACS/releases)
+[![Validate](https://github.com/C2gl/tududi_HACS/actions/workflows/validate.yml/badge.svg)](https://github.com/C2gl/tududi_HACS/actions/workflows/validate.yml)
 
 A HACS integration to add [Tududi](https://github.com/chrisvel/tududi) as a sidebar panel in Home Assistant. 
 This integration embeds your Tududi server in a convenient sidebar panel with full configuration through the Home Assistant UI.
@@ -49,16 +50,6 @@ If you provide authentication credentials (username/email and password), the int
 - **Today Todos Count**: Number of today's todos
 
 These sensors can be used in dashboards, automations, and notifications. For detailed examples and configuration, see the [Setup Guide](SETUP.md).
-
-### Multiple Instances
-You can add multiple Tududi instances by repeating the configuration process with different URLs.
-
-## Manual Configuration (Legacy)
-> **Note**: Manual configuration is no longer needed with the new config flow. The integration now handles everything automatically.
-
-If you still prefer manual configuration, you can:
-1. Edit the `panel.html` file in `/config/www/tududi_hacs/` to set your URL
-2. Add the panel configuration to your `configuration.yaml`
 
 ## nginx configuration 
 If your Tududi instance is behind NGINX, you might see an error saying that Home Assistant is not permitted to access your Tududi URL. This is because nginx blocks iframe embedding by default. You can work around this by adding these lines to your nginx configuration:
@@ -121,6 +112,9 @@ The panel will update immediately without requiring a restart.
 
 ## Version History
 
+### V0.2.0 
+- ✅ **Added**: finaly added to the official HACS store
+
 ### v0.1.5
 - ✅ **Added**: the use of the tududi api to have custom Home Assistant sensors
 - ✅ **Improved**: more issue handeling 
@@ -144,6 +138,13 @@ Feel free to contribute by making pull requests! (Don't forget to make your own 
 Sorry if my code is non-working or painful to read - I am not a developer and learning as I go. Any help is welcome and greatly appreciated.
 
 If you have an issue with anything, feel free to let me know in a constructive and respectful way, but keep in mind I was left unsupervised! 😅
+
+### Help to translate 
+If you see mistakes in a existing language, or wish to add your language? you can find the language files in `custom_components\tududi_integration\translations`. Feel free to fork the repo and make a pull request with your added language.
+
+You can either do this by using the strings folder and adding your language strings. Or you can choose to coppy the `en.json` file that will always be kept up to date with developement of features and retype the strings you want.
+
+When adding a language a workflow will run to check all your strings, please make sure all strings have been completed for your added language before asking for a merge. 
 
 ## Bug Reports
 

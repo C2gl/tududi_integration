@@ -51,5 +51,18 @@
       "unknown": "Er is een onverwachte fout opgetreden. Probeer het opnieuw."
     }
   },
-  "title": "Tududi HACS"
+  "entity": {
+    "sensor": {
+      "next_todo": {
+        "name": "Volgende taak"
+      },
+      "upcoming_todos_count": {
+        "name": "Aantal komende taken"
+      },
+      "today_todos_count": {
+        "name": "Aantal taken vandaag"
+      }
+    }
+  },
+  "title": "Tududi Integration"
 }

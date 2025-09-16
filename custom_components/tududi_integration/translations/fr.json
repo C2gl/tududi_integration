@@ -51,5 +51,18 @@
       "unknown": "Une erreur inattendue est survenue. Veuillez réessayer."
     }
   },
-  "title": "Tududi HACS"
+  "entity": {
+    "sensor": {
+      "next_todo": {
+        "name": "Prochaine tâche"
+      },
+      "upcoming_todos_count": {
+        "name": "Nombre de tâches à venir"
+      },
+      "today_todos_count": {
+        "name": "Nombre de tâches du jour"
+      }
+    }
+  },
+  "title": "Tududi Integration"
 }

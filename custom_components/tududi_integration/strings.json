@@ -51,5 +51,18 @@
       "unknown": "An unexpected error occurred. Please try again."
     }
   },
-  "title": "Tududi HACS"
+  "entity": {
+    "sensor": {
+      "next_todo": {
+        "name": "Next Todo"
+      },
+      "upcoming_todos_count": {
+        "name": "Upcoming Todos Count"
+      },
+      "today_todos_count": {
+        "name": "Today Todos Count"
+      }
+    }
+  },
+  "title": "Tududi integration"
 }
