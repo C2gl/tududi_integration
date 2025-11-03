@@ -2,6 +2,47 @@
 
 This guide provides detailed configuration examples and advanced usage scenarios for the Tududi HACS integration.
 
+## Integration Modes
+
+The Tududi integration can work in two different modes depending on your setup:
+
+### Mode 1: Standalone External Server
+Use this if you have Tududi running in an external Docker container or on another machine.
+
+**What you get:**
+- ✅ Sidebar iframe panel to access Tududi
+- ✅ Todo sensors (if credentials provided)
+- ✅ Full control over URL and configuration
+
+**Configuration:**
+- **Tududi Server URL**: Your external Tududi URL (e.g., `http://192.168.1.100:3000`)
+- **Credentials**: Optional for sensor functionality
+
+### Mode 2: With Tududi Add-on ⭐ RECOMMENDED
+Use this if you have the [Tududi Add-on](https://github.com/c2gl/tududi_addon) installed in Home Assistant.
+
+**What you get:**
+- ✅ Integrated Home Assistant ingress (no iframe needed)
+- ✅ Todo sensors connected to local add-on API
+- ✅ Automatic detection - no duplicate panels
+- ✅ Seamless experience
+
+**How it works:**
+1. Install the [Tududi Add-on](https://github.com/c2gl/tududi_addon)
+2. Configure and start the add-on
+3. Install this integration via HACS
+4. Configure with add-on ingress URL and credentials
+5. The integration automatically detects the add-on and only creates sensors!
+
+**Configuration:**
+- **Tududi Server URL**: Add-on ingress URL (check add-on documentation)
+- **Credentials**: Your Tududi username/email and password (required for sensors)
+
+**Important:** The add-on detection happens at integration startup. If you install the add-on after the integration:
+1. Restart Home Assistant to trigger detection
+2. The integration will detect the addon and will no longer create the iframe panel. If the panel was previously present, it will be removed after a restart or reload of the integration.
+3. Sensors will continue to work normally
+
 ## Sensor Features
 
 If you provide authentication credentials (username/email and password), the integration will create comprehensive sensors that track your todos:
