@@ -55,8 +55,14 @@ To use both together:
 1. Install and configure the Tududi Add-on first
 2. Install this integration via HACS
 3. Configure the integration with:
-   - **Tududi Server URL**: Use the add-on's URL (typically starts with `/api/hassio_ingress/`)
-   - **Credentials**: Provide your Tududi username/email and password for sensor access
+   - **Tududi Server URL**: Use `http://localhost:3002` (or whatever port you configured in the add-on)
+   - **Username/Email**: Your Tududi email from the add-on's `tududi_user_email` setting
+   - **Password**: Your Tududi password from the add-on's `tududi_user_password` setting
+
+**Important**: 
+- Don't use the ingress URL (e.g., `/api/hassio_ingress/...`) - use the local URL instead
+- The credentials are **required** for sensors to authenticate with the add-on's API
+- Make sure the add-on is running before configuring the integration
 
 The integration will detect the add-on automatically and only set up the sensors, avoiding duplicate sidebar entries!
 

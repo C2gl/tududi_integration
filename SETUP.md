@@ -31,17 +31,40 @@ Use this if you have the [Tududi Add-on](https://github.com/c2gl/tududi_addon) i
 1. Install the [Tududi Add-on](https://github.com/c2gl/tududi_addon)
 2. Configure and start the add-on
 3. Install this integration via HACS
-4. Configure with add-on ingress URL and credentials
+4. Configure the integration with the settings below
 5. The integration automatically detects the add-on and only creates sensors!
 
-**Configuration:**
-- **Tududi Server URL**: Add-on ingress URL (check add-on documentation)
-- **Credentials**: Your Tududi username/email and password (required for sensors)
+**Configuration Settings:**
+
+| Setting | Value | Notes |
+|---------|-------|-------|
+| **Tududi Server URL** | `http://localhost:3002` | Use the local URL, not the ingress URL. Change port if you configured a different one in the add-on. |
+| **Panel Title** | Any name (e.g., "Tududi") | Won't be used since panel creation is skipped when add-on is detected |
+| **Panel Icon** | Any MDI icon | Won't be used when add-on is detected |
+| **Username/Email** | Your add-on's `tududi_user_email` | **Required** - must match the email configured in the add-on |
+| **Password** | Your add-on's `tududi_user_password` | **Required** - must match the password configured in the add-on |
+
+**Example Configuration:**
+```
+Tududi Server URL: http://localhost:3002
+Panel Title: Tududi
+Panel Icon: mdi:clipboard-text
+Username/Email: admin@example.com
+Password: your-secure-password
+```
+
+**Common Issues:**
+- ❌ **Don't use** the ingress URL (e.g., `/api/hassio_ingress/...`) - the sensors need the direct local URL
+- ❌ **Don't use** external URLs - the add-on runs locally only
+- ✅ **Do use** `http://localhost:3002` or `http://127.0.0.1:3002`
+- ✅ **Do ensure** the add-on is running before adding the integration
+- ✅ **Do match** the credentials exactly with what's in the add-on configuration
 
 **Important:** The add-on detection happens at integration startup. If you install the add-on after the integration:
 1. Restart Home Assistant to trigger detection
-2. The integration will detect the addon and will no longer create the iframe panel. If the panel was previously present, it will be removed after a restart or reload of the integration.
-3. Sensors will continue to work normally
+2. The integration will detect the add-on and will no longer create the iframe panel
+3. If the panel was previously present, it will be removed after a restart or reload of the integration
+4. Sensors will continue to work normally
 
 ## Sensor Features
 
