@@ -38,7 +38,7 @@ Use this if you have the [Tududi Add-on](https://github.com/c2gl/tududi_addon) i
 - **Tududi Server URL**: Add-on ingress URL (check add-on documentation)
 - **Credentials**: Your Tududi username/email and password (required for sensors)
 
-**Important:** The addon detection happens at integration startup. If you install the addon after the integration:
+**Important:** The add-on detection happens at integration startup. If you install the add-on after the integration:
 1. Restart Home Assistant to trigger detection
 2. The integration will detect the addon and will no longer create the iframe panel. If the panel was previously present, it will be removed after a restart or reload of the integration.
 3. Sensors will continue to work normally
