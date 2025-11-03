@@ -5,12 +5,14 @@ import logging
 import os
 from pathlib import Path
 
+import aiohttp
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
-from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON
+from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON, TUDUDI_ADDON_SLUGS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,6 +27,58 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 
 
+async def _is_tududi_addon_installed(hass: HomeAssistant) -> bool:
+    """Check if the Tududi addon is installed and running.
+    
+    Returns True if the addon is detected, False otherwise.
+    """
+    # Check if we're running in a supervised environment
+    if not hasattr(hass.components, 'hassio'):
+        _LOGGER.debug("Not running in a supervised environment")
+        return False
+    
+    try:
+        # Try to import hassio component
+        from homeassistant.components import hassio
+        
+        # Check if hassio is loaded
+        if not hass.services.has_service('hassio', 'addon_info'):
+            _LOGGER.debug("Hassio service not available")
+            return False
+        
+        # Try to get addon info using Supervisor API
+        for slug in TUDUDI_ADDON_SLUGS:
+            try:
+                # Call hassio.addon_info service
+                result = await hass.services.async_call(
+                    'hassio',
+                    'addon_info',
+                    {'addon': slug},
+                    blocking=True,
+                    return_response=True
+                )
+                
+                if result and isinstance(result, dict):
+                    # Check if addon exists and is installed
+                    _LOGGER.info(f"Found Tududi addon with slug: {slug}")
+                    return True
+                    
+            except Exception as e:
+                # Addon with this slug doesn't exist, try next one
+                _LOGGER.debug(f"Addon slug {slug} not found: {e}")
+                continue
+        
+        _LOGGER.debug("No Tududi addon found")
+        return False
+        
+    except ImportError:
+        _LOGGER.debug("Hassio component not available")
+        return False
+    except Exception as e:
+        _LOGGER.warning(f"Error checking for Tududi addon: {e}")
+        return False
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Tududi HACS from a config entry."""
     hass.data.setdefault(DOMAIN, {})
@@ -32,10 +86,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Store the config entry data
     hass.data[DOMAIN][entry.entry_id] = entry.data
     
-    # Register the frontend panel
-    await async_register_panel(hass, entry)
+    # Check if Tududi addon is installed
+    addon_installed = await _is_tududi_addon_installed(hass)
     
-    # Set up sensor platform
+    if addon_installed:
+        _LOGGER.info("Tududi addon detected - skipping sidebar panel creation")
+    else:
+        # Register the frontend panel only if addon is not installed
+        await async_register_panel(hass, entry)
+    
+    # Set up sensor platform (always create sensors)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     
     # Set up options update listener
