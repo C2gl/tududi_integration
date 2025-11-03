@@ -117,7 +117,7 @@ Want detailed setup examples and advanced configurations? Check out our [**Setup
 - **SSL/HTTPS Warnings**: Use HTTP for local access or ensure proper SSL certificates
 - **Iframe Errors**: Check the nginx configuration section above
 - **Sensors Not Working**: Provide valid credentials and wait a few minutes for first data fetch
-- **Addon Not Detected**: The integration checks for the addon at startup. If you install the addon after the integration, restart Home Assistant to trigger detection
+- **Add-on Not Detected**: The integration checks for the Add-on at startup. If you install the Add-on after the integration, restart Home Assistant to trigger detection
 
 For detailed troubleshooting and advanced configuration, see the [Setup Guide](SETUP.md).
 
@@ -139,7 +139,7 @@ The panel will update immediately without requiring a restart.
 - ✅ **Fixed**: Prevents duplicate sidebar entries when using the add-on
 
 ### V0.2.0 
-- ✅ **Added**: finaly added to the official HACS store
+- ✅ **Added**: finally added to the official HACS store
 
 ### v0.1.5
 - ✅ **Added**: the use of the tududi api to have custom Home Assistant sensors
