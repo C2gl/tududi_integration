@@ -36,9 +36,6 @@ async def _is_tududi_addon_installed(hass: HomeAssistant) -> bool:
         return False
     
     try:
-        # Try to import hassio component
-        from homeassistant.components import hassio
-        
         # Check if hassio is loaded
         if not hass.services.has_service('hassio', 'addon_info'):
             _LOGGER.debug("Hassio service not available")
