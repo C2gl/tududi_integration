@@ -1,10 +1,10 @@
 {
     "domain": "tududi_integration",
     "name": "TuDuDi HACS webpanel",
+    "after_dependencies": ["hassio"],
     "codeowners": ["@C2gl"],
     "config_flow": true,
     "dependencies": ["frontend"],
-    "after_dependencies": ["hassio"],
     "documentation": "https://github.com/C2gl/tududi_integration",
     "integration_type": "service",
     "iot_class": "local_polling",
