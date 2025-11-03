@@ -139,7 +139,7 @@ The panel will update immediately without requiring a restart.
 - ✅ **Fixed**: Prevents duplicate sidebar entries when using the add-on
 
 ### V0.2.0 
-- ✅ **Added**: finaly added to the official HACS store
+- ✅ **Added**: finally added to the official HACS store
 
 ### v0.1.5
 - ✅ **Added**: the use of the tududi api to have custom Home Assistant sensors
