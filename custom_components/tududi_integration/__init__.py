@@ -26,7 +26,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 
 async def _is_tududi_addon_installed(hass: HomeAssistant) -> bool:
-    """Check if the Tududi addon is installed and running.
+    """Check if the Tududi addon is installed.
     
     Returns True if the addon is detected, False otherwise.
     """
