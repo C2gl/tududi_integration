@@ -5,8 +5,6 @@ import logging
 import os
 from pathlib import Path
 
-import aiohttp
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
