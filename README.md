@@ -1,9 +1,9 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
-[![GitHub release](https://img.shields.io/github/release/c2gl/tududi_integration.svg)](https://github.com/c2gl/tududi_integration/releases)
-[![GitHub issues](https://img.shields.io/github/issues/c2gl/tududi_integration.svg)](https://github.com/c2gl/tududi_HACS/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/c2gl/tududi_integration.svg)](https://github.com/c2gl/tududi_integration/pulls)
-[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/C2gl/tududi_integration/total)](https://github.com/c2gl/tududi_integration/releases)
-[![Validate](https://github.com/C2gl/tududi_integration/actions/workflows/validate.yml/badge.svg)](https://github.com/C2gl/tududi_integration/actions/workflows/validate.yml)
+[![GitHub release](https://img.shields.io/github/release/c2gl/tududi_HACS.svg)](https://github.com/c2gl/tududi_HACS/releases)
+[![GitHub issues](https://img.shields.io/github/issues/c2gl/tududi_HACS.svg)](https://github.com/c2gl/tududi_HACS/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/c2gl/tududi_hacs.svg)](https://github.com/c2gl/tududi_hacs/pulls)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/C2gl/tududi_HACS/total)](https://github.com/c2gl/tududi_HACS/releases)
+[![Validate](https://github.com/C2gl/tududi_HACS/actions/workflows/validate.yml/badge.svg)](https://github.com/C2gl/tududi_HACS/actions/workflows/validate.yml)
 
 A HACS integration to add [Tududi](https://github.com/chrisvel/tududi) as a sidebar panel in Home Assistant. 
 This integration embeds your Tududi server in a convenient sidebar panel with full configuration through the Home Assistant UI.
@@ -14,9 +14,7 @@ This integration embeds your Tududi server in a convenient sidebar panel with fu
 
 - **Home Assistant**: Version 2023.1.0 or newer
 - **HACS**: Home Assistant Community Store installed
-- **Tududi Server**: A running [Tududi](https://github.com/chrisvel/tududi) instance. You have two options:
-  - **External Docker**: Run Tududi in an external docker container. See [Tududi's repo](https://github.com/chrisvel/tududi) for instructions
-  - **Home Assistant Add-on** ⭐ NEW: Use the [Tududi Add-on](https://github.com/c2gl/tududi_addon) for seamless integration with Home Assistant ingress
+- **Tududi Server**: A running [Tududi](https://github.com/chrisvel/tududi) instance in an external docker. Please follow Tududi's repo linked above with instructions on how to get this running
 
 # Installation 
 ## HACS Instructions
@@ -43,28 +41,6 @@ After installation and restart:
 5. Click **Submit**
 
 The Tududi panel will automatically appear in your Home Assistant sidebar!
-
-## Using with the Tududi Add-on
-
-If you have the [Tududi Add-on](https://github.com/c2gl/tududi_addon) installed, the integration will automatically detect it and:
-- ✅ **Skip creating a sidebar panel** (the add-on already provides one through ingress)
-- ✅ **Still create all sensors** to track your todos
-- ✅ **Work seamlessly** with the add-on's local API
-
-To use both together:
-1. Install and configure the Tududi Add-on first
-2. Install this integration via HACS
-3. Configure the integration with:
-   - **Tududi Server URL**: Use `http://localhost:3002` (or whatever port you configured in the add-on)
-   - **Username/Email**: Your Tududi email from the add-on's `tududi_user_email` setting
-   - **Password**: Your Tududi password from the add-on's `tududi_user_password` setting
-
-**Important**: 
-- Don't use the ingress URL (e.g., `/api/hassio_ingress/...`) - use the local URL instead
-- The credentials are **required** for sensors to authenticate with the add-on's API
-- Make sure the add-on is running before configuring the integration
-
-The integration will detect the add-on automatically and only set up the sensors, avoiding duplicate sidebar entries!
 
 ### Sensor Features
 If you provide authentication credentials (username/email and password), the integration will also create sensors that track your todos:
@@ -100,7 +76,6 @@ If you're using HTTPS with self-signed certificates, you may see SSL warnings in
 - ✅ **Todo Sensors**: Track your todos with smart sensors (optional with login)
 - ✅ **Auto-Update**: Change settings anytime through the integration options
 - ✅ **Clean Uninstall**: Automatically removes panels and files when uninstalled
-- ✅ **Add-on Detection** ⭐ NEW: Automatically detects if the Tududi add-on is installed and skips creating duplicate sidebar panels
 
 ## Quick Start
 
@@ -123,7 +98,6 @@ Want detailed setup examples and advanced configurations? Check out our [**Setup
 - **SSL/HTTPS Warnings**: Use HTTP for local access or ensure proper SSL certificates
 - **Iframe Errors**: Check the nginx configuration section above
 - **Sensors Not Working**: Provide valid credentials and wait a few minutes for first data fetch
-- **Add-on Not Detected**: The integration checks for the Add-on at startup. If you install the Add-on after the integration, restart Home Assistant to trigger detection
 
 For detailed troubleshooting and advanced configuration, see the [Setup Guide](SETUP.md).
 
@@ -138,14 +112,8 @@ The panel will update immediately without requiring a restart.
 
 ## Version History
 
-### V0.3.0 ⭐ NEW
-- ✅ **Added**: Automatic detection of Tududi Add-on
-- ✅ **Improved**: Skips sidebar panel creation when add-on is detected
-- ✅ **Enhanced**: Better integration with Home Assistant Supervisor
-- ✅ **Fixed**: Prevents duplicate sidebar entries when using the add-on
-
 ### V0.2.0 
-- ✅ **Added**: finally added to the official HACS store
+- ✅ **Added**: finaly added to the official HACS store
 
 ### v0.1.5
 - ✅ **Added**: the use of the tududi api to have custom Home Assistant sensors

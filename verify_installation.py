@@ -17,20 +17,12 @@ def verify_installation():
     
     # Check if we're in the right directory
     current_dir = Path.cwd()
-    integration_path_new = current_dir / "custom_components" / "tududi_integration"
-    integration_path_old = current_dir / "custom_components" / "tududi_hacs"
-    
-    # Support both old and new naming
-    if integration_path_new.exists():
-        integration_dir = integration_path_new
-        print("✅ Found integration at: custom_components/tududi_integration/")
-    elif integration_path_old.exists():
-        integration_dir = integration_path_old
-        print("✅ Found integration at: custom_components/tududi_hacs/")
-    else:
+    if not (current_dir / "custom_components" / "tududi_hacs").exists():
         print("❌ Error: This script must be run from the Home Assistant config directory")
-        print("   Expected to find: custom_components/tududi_integration/")
+        print("   Expected to find: custom_components/tududi_hacs/")
         return False
+    
+    integration_dir = current_dir / "custom_components" / "tududi_hacs"
     
     # Check required files
     required_files = [
@@ -97,11 +89,6 @@ def verify_installation():
     print("3. Search for 'Tududi HACS'")
     print("4. Configure with your Tududi server URL")
     print("5. Optionally add username/password for todo sensors")
-    print("\n💡 Addon Detection:")
-    print("   - If you have the Tududi Add-on installed, the integration will")
-    print("     automatically detect it and skip creating a sidebar panel")
-    print("   - Install the add-on first for best experience!")
-    print("   - See: https://github.com/c2gl/tududi_addon")
     
     return True
 

@@ -1,7 +1,6 @@
 {
     "domain": "tududi_integration",
     "name": "TuDuDi HACS webpanel",
-    "after_dependencies": ["hassio"],
     "codeowners": ["@C2gl"],
     "config_flow": true,
     "dependencies": ["frontend"],
