@@ -9,5 +9,5 @@
     "iot_class": "local_polling",
     "issue_tracker": "https://github.com/C2gl/tududi_integration/issues",
     "requirements": ["aiohttp"],
-    "version": "0.3.1"
+    "version": "0.2.1"
 }
