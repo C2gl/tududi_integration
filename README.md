@@ -5,6 +5,9 @@
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/C2gl/tududi_HACS/total)](https://github.com/c2gl/tududi_HACS/releases)
 [![Validate](https://github.com/C2gl/tududi_HACS/actions/workflows/validate.yml/badge.svg)](https://github.com/C2gl/tududi_HACS/actions/workflows/validate.yml)
 
+# ! currently broken! 
+will fix once i am done with exams
+
 A HACS integration to add [Tududi](https://github.com/chrisvel/tududi) as a sidebar panel in Home Assistant. 
 This integration embeds your Tududi server in a convenient sidebar panel with full configuration through the Home Assistant UI.
 
