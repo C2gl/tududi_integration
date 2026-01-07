@@ -1,10 +1,13 @@
 """Config flow for Tududi integration."""
+import asyncio
 from __future__ import annotations
 
 import logging
 from typing import Any
 from urllib.parse import urlparse
 
+import aiohttp
+import async_timeout
 import voluptuous as vol
 
 from homeassistant import config_entries
@@ -13,7 +16,14 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 import homeassistant.helpers.config_validation as cv
 
-from .const import DOMAIN, CONF_URL, CONF_TITLE, CONF_ICON, CONF_USERNAME, CONF_PASSWORD
+from .const import (
+    DOMAIN,
+    CONF_URL,
+    CONF_TITLE,
+    CONF_ICON,
+    CONF_API_KEY,
+    API_BASE_PATH,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,8 +32,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_URL): cv.string,
         vol.Optional(CONF_TITLE, default="Tududi"): cv.string,
         vol.Optional(CONF_ICON, default="mdi:clipboard-text"): cv.string,
-        vol.Optional(CONF_USERNAME): cv.string,
-        vol.Optional(CONF_PASSWORD): cv.string,
+        vol.Optional(CONF_API_KEY): cv.string,
     }
 )
 
@@ -31,13 +40,11 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 def validate_url(url: str) -> bool:
     """Validate the URL format."""
     try:
-        # Strip whitespace and ensure it's a string
         url = str(url).strip()
         if not url:
             return False
             
         result = urlparse(url)
-        # Check that we have both scheme and netloc, and scheme is http/https
         return (
             result.scheme in ("http", "https") 
             and result.netloc 
@@ -47,6 +54,43 @@ def validate_url(url: str) -> bool:
         return False
 
 
+async def validate_api_connection(
+    hass: HomeAssistant, base_url: str, api_key: str | None = None
+) -> bool:
+    """Test if we can connect to the Tududi API."""
+    if not api_key:
+        # If no API key provided, just check if the URL is accessible
+        _LOGGER.info("No API key provided, skipping API validation")
+        return True
+    
+    try:
+        url = f"{base_url.rstrip('/')}{API_BASE_PATH}/tasks"
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Accept": "application/json",
+        }
+        
+        async with async_timeout.timeout(10):
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, headers=headers) as response:
+                    if response.status == 200:
+                        _LOGGER.info("Successfully validated API connection")
+                        return True
+                    elif response.status == 401:
+                        _LOGGER.error("Invalid API key")
+                        raise InvalidAuth
+                    else:
+                        _LOGGER.error("API returned status %s", response.status)
+                        raise CannotConnect
+                        
+    except asyncio.TimeoutError:
+        _LOGGER.error("Timeout connecting to Tududi API")
+        raise CannotConnect
+    except aiohttp.ClientError as err:
+        _LOGGER.error("Error connecting to Tududi API: %s", err)
+        raise CannotConnect
+
+
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect."""
     url = data[CONF_URL]
@@ -54,7 +98,11 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     if not validate_url(url):
         raise InvalidURL
     
-    # Return info that you want to store in the config entry.
+    # Test API connection if API key is provided
+    api_key = data.get(CONF_API_KEY)
+    if api_key:
+        await validate_api_connection(hass, url, api_key)
+    
     return {
         "title": f"Tududi Panel - {data[CONF_TITLE]}",
         "url": url,
@@ -66,7 +114,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Tududi HACS."""
 
-    VERSION = 1
+    VERSION = 2  # Increment version for migration
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -79,9 +127,11 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 info = await validate_input(self.hass, user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
+            except InvalidAuth:
+                errors[CONF_API_KEY] = "invalid_auth"
             except InvalidURL:
                 errors[CONF_URL] = "invalid_url"
-            except Exception:  # pylint: disable=broad-except
+            except Exception:
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
             else:
@@ -92,7 +142,12 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return self.async_create_entry(title=info["title"], data=user_input)
 
         return self.async_show_form(
-            step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
+            step_id="user",
+            data_schema=STEP_USER_DATA_SCHEMA,
+            errors=errors,
+            description_placeholders={
+                "api_key_help": "Generate an API key from your Tududi settings (User menu → API Keys)"
+            }
         )
 
     @staticmethod
@@ -113,9 +168,13 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         if user_input is not None:
             try:
                 await validate_input(self.hass, user_input)
+            except CannotConnect:
+                errors["base"] = "cannot_connect"
+            except InvalidAuth:
+                errors[CONF_API_KEY] = "invalid_auth"
             except InvalidURL:
                 errors[CONF_URL] = "invalid_url"
-            except Exception:  # pylint: disable=broad-except
+            except Exception:
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
             else:
@@ -137,21 +196,27 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                     CONF_ICON, default=current_data.get(CONF_ICON, "mdi:clipboard-text")
                 ): cv.string,
                 vol.Optional(
-                    CONF_USERNAME, default=current_data.get(CONF_USERNAME, "")
-                ): cv.string,
-                vol.Optional(
-                    CONF_PASSWORD, default=current_data.get(CONF_PASSWORD, "")
+                    CONF_API_KEY, default=current_data.get(CONF_API_KEY, "")
                 ): cv.string,
             }
         )
 
         return self.async_show_form(
-            step_id="init", data_schema=schema, errors=errors
+            step_id="init",
+            data_schema=schema,
+            errors=errors,
+            description_placeholders={
+                "api_key_help": "Generate an API key from your Tududi settings (User menu → API Keys)"
+            }
         )
 
 
 class CannotConnect(HomeAssistantError):
     """Error to indicate we cannot connect."""
+
+
+class InvalidAuth(HomeAssistantError):
+    """Error to indicate authentication failed."""
 
 
 class InvalidURL(HomeAssistantError):

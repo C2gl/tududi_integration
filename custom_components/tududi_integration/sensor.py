@@ -1,7 +1,6 @@
 """Sensor platform for Tududi HACS integration."""
 from __future__ import annotations
 
-import asyncio
 import logging
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
@@ -22,10 +21,10 @@ from .const import (
     DOMAIN,
     CONF_URL,
     CONF_TITLE,
-    CONF_USERNAME,
-    CONF_PASSWORD,
+    CONF_API_KEY,
     SENSOR_UPDATE_INTERVAL,
     SENSOR_TIMEOUT,
+    API_BASE_PATH,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -56,13 +55,11 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         self,
         hass: HomeAssistant,
         base_url: str,
-        username: Optional[str] = None,
-        password: Optional[str] = None,
+        api_key: Optional[str] = None,
     ) -> None:
         """Initialize the coordinator."""
         self.base_url = base_url.rstrip("/")
-        self.username = username
-        self.password = password
+        self.api_key = api_key
         self._session = None
         
         super().__init__(
@@ -85,44 +82,7 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
                 "upcoming_todos_count": 0,
                 "today_todos_count": 0,
                 "all_tasks": [],
-                "metrics": {},
             }
-
-    async def _authenticate(self, session: aiohttp.ClientSession) -> bool:
-        """Authenticate with Tududi server."""
-        if not self.username or not self.password:
-            _LOGGER.debug("No credentials provided, trying without authentication")
-            return True
-
-        try:
-            # Login to Tududi - based on the actual API endpoints
-            login_url = f"{self.base_url}/api/login"
-            login_data = {
-                "email": self.username,
-                "password": self.password,
-            }
-            
-            headers = {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            }
-            
-            async with session.post(login_url, json=login_data, headers=headers) as response:
-                if response.status == 200:
-                    _LOGGER.debug("Successfully authenticated with Tududi")
-                    # Session cookies should be automatically stored in the session
-                    return True
-                else:
-                    response_text = await response.text()
-                    _LOGGER.error(
-                        "Failed to authenticate with Tududi: %s - %s", 
-                        response.status, response_text
-                    )
-                    return False
-                    
-        except Exception as exception:
-            _LOGGER.error("Authentication error: %s", exception)
-            return False
 
     async def async_shutdown(self) -> None:
         """Close the session when coordinator is shutting down."""
@@ -130,55 +90,61 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
             await self._session.close()
 
     async def _fetch_tududi_data(self) -> Dict[str, Any]:
-        """Fetch data from Tududi API."""
+        """Fetch data from Tududi API v1."""
+        if not self.api_key:
+            _LOGGER.debug("No API key configured, sensors will not function")
+            return {
+                "next_todo": None,
+                "upcoming_todos_count": 0,
+                "today_todos_count": 0,
+                "all_tasks": [],
+            }
+
         # Create or reuse session
         if not self._session or self._session.closed:
             connector = aiohttp.TCPConnector(force_close=True, enable_cleanup_closed=True)
             self._session = aiohttp.ClientSession(connector=connector)
 
         try:
-            # Authenticate if credentials are provided
-            if not await self._authenticate(self._session):
-                raise UpdateFailed("Authentication failed")
-
-            # Fetch tasks - use the correct API endpoint
-            tasks_url = f"{self.base_url}/api/tasks"
+            # Use the new API v1 endpoint
+            tasks_url = f"{self.base_url}{API_BASE_PATH}/tasks"
             
+            # Use Bearer token authentication
             headers = {
+                "Authorization": f"Bearer {self.api_key}",
                 "Accept": "application/json",
-                "X-Requested-With": "XMLHttpRequest",
             }
+            
+            _LOGGER.debug("Fetching tasks from: %s", tasks_url)
             
             async with self._session.get(tasks_url, headers=headers) as response:
                 if response.status == 401:
-                    # Session expired, try to re-authenticate
-                    if await self._authenticate(self._session):
-                        async with self._session.get(tasks_url, headers=headers) as retry_response:
-                            if retry_response.status == 200:
-                                data = await retry_response.json()
-                            else:
-                                response_text = await retry_response.text()
-                                raise UpdateFailed(f"API request failed: {retry_response.status} - {response_text}")
-                    else:
-                        raise UpdateFailed("Authentication failed")
+                    raise UpdateFailed("Authentication failed - invalid API key")
                 elif response.status == 200:
                     data = await response.json()
+                    _LOGGER.debug("Successfully fetched data from API v1")
                 else:
                     response_text = await response.text()
                     raise UpdateFailed(f"API request failed: {response.status} - {response_text}")
 
             return await self._process_tududi_data(data)
             
+        except UpdateFailed:
+            raise
         except Exception as exception:
             _LOGGER.error("Error fetching Tududi data: %s", exception)
             raise UpdateFailed(f"Error fetching data: {exception}")
 
     async def _process_tududi_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Process the fetched Tududi data."""
-        _LOGGER.debug("Processing Tududi API response: %s", data)
+        _LOGGER.debug("Processing Tududi API response")
         
-        tasks = data.get("tasks", [])
-        metrics = data.get("metrics", {})
+        # The API v1 returns tasks directly or in a wrapper
+        # Check if tasks are in a wrapper object or directly in the response
+        if isinstance(data, list):
+            tasks = data
+        else:
+            tasks = data.get("tasks", data.get("data", []))
         
         _LOGGER.debug("Found %d tasks in API response", len(tasks))
         
@@ -191,13 +157,11 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         today_date = now.date()
         
         for task in tasks:
-        # Skip completed tasks (status 2 = DONE in Tududi)
+            # Skip completed tasks (status 2 = DONE in Tududi)
             if task.get("status") == 2:
                 continue
                 
             task_due_date = task.get("due_date")
-            task_name = task.get("name", "Unnamed Task")
-            task_priority = task.get("priority", 0)
             
             # Parse due date if available
             due_date = None
@@ -222,7 +186,7 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         upcoming_todos.sort(key=lambda x: (
             datetime.fromisoformat(x.get("due_date", "9999-12-31").replace('Z', '+00:00')).date() 
             if x.get("due_date") else datetime(9999, 12, 31).date(),
-            -x.get("priority", 0)  # Higher priority first (negative for reverse sort)
+            -x.get("priority", 0)  # Higher priority first
         ))
         
         # Sort today todos by priority
@@ -234,20 +198,11 @@ class TududiDataUpdateCoordinator(DataUpdateCoordinator):
         elif upcoming_todos:
             next_todo = upcoming_todos[0]
         
-        # Also check suggested tasks from metrics
-        suggested_tasks = metrics.get("suggested_tasks", [])
-        if not next_todo and suggested_tasks:
-            # Filter out completed suggested tasks
-            active_suggested = [t for t in suggested_tasks if t.get("status") != 2]
-            if active_suggested:
-                next_todo = active_suggested[0]
-        
         result = {
             "next_todo": next_todo,
             "upcoming_todos_count": len(upcoming_todos),
             "today_todos_count": len(today_todos),
             "all_tasks": tasks,
-            "metrics": metrics,
         }
         
         _LOGGER.debug("Processed data - Next todo: %s, Upcoming: %d, Today: %d", 
@@ -264,12 +219,15 @@ async def async_setup_entry(
 ) -> None:
     """Set up Tududi sensors based on a config entry."""
     base_url = config_entry.data[CONF_URL]
-    username = config_entry.data.get(CONF_USERNAME)
-    password = config_entry.data.get(CONF_PASSWORD)
+    api_key = config_entry.data.get(CONF_API_KEY)
     
-    coordinator = TududiDataUpdateCoordinator(
-        hass, base_url, username, password
-    )
+    if not api_key:
+        _LOGGER.warning(
+            "No API key configured. Sensors will not function. "
+            "Please configure an API key in the integration options."
+        )
+    
+    coordinator = TududiDataUpdateCoordinator(hass, base_url, api_key)
     
     # Try to fetch initial data, but don't fail if it doesn't work
     try:
@@ -305,10 +263,10 @@ class TududiSensor(CoordinatorEntity, SensorEntity):
         # Set device info
         self._attr_device_info = {
             "identifiers": {(DOMAIN, config_entry.entry_id)},
-            "name": config_entry.data.get("title", "Tududi"),
+            "name": config_entry.data.get(CONF_TITLE, "Tududi"),
             "manufacturer": "Tududi",
             "model": "Task Manager",
-            "sw_version": "1.0",
+            "sw_version": "2.0 (API v1)",
         }
 
     @property
@@ -348,31 +306,47 @@ class TududiSensor(CoordinatorEntity, SensorEntity):
         if self.entity_description.key == "next_todo":
             next_todo = self.coordinator.data.get("next_todo")
             if next_todo:
+                # Handle both nested and flat project structure
+                project_name = None
+                if isinstance(next_todo.get("project"), dict):
+                    project_name = next_todo["project"].get("name")
+                elif isinstance(next_todo.get("Project"), dict):
+                    project_name = next_todo["Project"].get("name")
+                
+                # Handle tags
+                tags = []
+                if isinstance(next_todo.get("tags"), list):
+                    tags = [tag.get("name") for tag in next_todo["tags"] if isinstance(tag, dict)]
+                elif isinstance(next_todo.get("Tags"), list):
+                    tags = [tag.get("name") for tag in next_todo["Tags"] if isinstance(tag, dict)]
+                
                 attributes.update({
                     "task_id": next_todo.get("id"),
-                    "description": next_todo.get("note", ""),
+                    "description": next_todo.get("note", next_todo.get("description", "")),
                     "due_date": next_todo.get("due_date"),
                     "priority": next_todo.get("priority", 0),
                     "priority_name": self._get_priority_name(next_todo.get("priority", 0)),
                     "status": next_todo.get("status"),
                     "status_name": self._get_status_name(next_todo.get("status", 0)),
-                    "project": next_todo.get("Project", {}).get("name") if next_todo.get("Project") else None,
-                    "tags": [tag.get("name") for tag in next_todo.get("Tags", [])],
+                    "project": project_name,
+                    "tags": tags,
                     "today": next_todo.get("today", False),
                     "created_at": next_todo.get("created_at"),
                     "updated_at": next_todo.get("updated_at"),
                 })
         
-        # Add metrics data for all sensors
-        metrics = self.coordinator.data.get("metrics", {})
-        if metrics:
-            attributes.update({
-                "total_open_tasks": metrics.get("total_open_tasks", 0),
-                "tasks_in_progress_count": metrics.get("tasks_in_progress_count", 0),
-                "last_updated": datetime.now().isoformat(),
-            })
+        # Add update timestamp
+        attributes["last_updated"] = datetime.now().isoformat()
         
         return attributes
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        # If no API key, mark as unavailable
+        if not self.coordinator.api_key:
+            return False
+        return super().available
 
     def _get_priority_name(self, priority: int) -> str:
         """Convert priority number to name."""
