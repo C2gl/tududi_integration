@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import logging
-import os
 from pathlib import Path
 
 from homeassistant.config_entries import ConfigEntry
@@ -173,6 +172,3 @@ panel_custom:
     module_url: %s
     embed_iframe: true
     require_admin: false""", panel_name, title, icon, panel_name, panel_url)
-
-
-
